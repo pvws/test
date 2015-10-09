@@ -10,6 +10,8 @@ import java.util.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.client.*;
 
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+
 /**
  * 
  * @author PV KT
@@ -23,14 +25,18 @@ public class PushArticleToSW {
 	
 	public static void doPush () {
 		Client client;
+		HttpAuthenticationFeature httpAuthFeat;
 		WebTarget wtHost;
 		Invocation.Builder invB;
 		Response resp;
 		
 		client = ClientBuilder.newClient();
-		client.property("user", "api");
-		client.property("password","password");
-		
+//		client.property("user", "api");
+//		client.property("password","password");
+
+		httpAuthFeat = HttpAuthenticationFeature.digest("api", "s5CPwkoPRlubpHGtpBuoVNRixoJwzb4rIUcTltOv");
+		client.register(httpAuthFeat);
+
 		wtHost = client.target("http://shopware-dev/api/article");
 		invB =  wtHost.request();
 		invB.accept(MediaType.APPLICATION_JSON_TYPE);

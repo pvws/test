@@ -9,6 +9,7 @@ import de.pvws.swtools.swDataStructure.*;
 import de.pvws.swtools.util.ExportSWArticleToCsv;
 import de.pvws.swtools.util.ImportDWArticleCat;
 import de.pvws.swtools.util.ImportDWPriceCat;
+import de.pvws.swtools.util.REST.*;
 
 import java.util.*;
 
@@ -29,6 +30,8 @@ public class Main {
 		
 		llSWArticle = new LinkedList<SWArticle>();
 		try {
+			PullArticleFromSW.doPull();
+			
 			// import Article MasterData
 			dwACat = new ImportDWArticleCat (llSWArticle);
 			System.out.println ("Beginn MasterCat einlesen : " + PvwsCalendar.getDateTime());
