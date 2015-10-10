@@ -9,8 +9,9 @@ import java.util.*;
 
 import javax.ws.rs.core.*;
 import javax.ws.rs.client.*;
-
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+
+import javax.json.*;
 
 /**
  * 
