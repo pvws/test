@@ -6,14 +6,15 @@ package de.pvws.swtools.swDataStructure;
 import java.util.*;
 
 /**
+ * Represents the Shopware Article Data Structure.
+ * 
  * @author PV WS
- *
  */
 public class SWArticle {
 	private String strArticleNumber;			// extern
-	private String strParentArticelNumber;		// extern / obsolet
+//	private String strParentArticelNumber;		// extern / obsolet
 	private String strSwArticleNumber;
-	private String strSwParentArticleNumber;	// obsolet
+//	private String strSwParentArticleNumber;	// obsolet
 
 	private String strName;
 	private String strDescription;
@@ -22,6 +23,7 @@ public class SWArticle {
 	private SWTax swtSwTax;
 
 	private SWArticleDetail swadMainDetail;
+	private Boolean bIsMainDetailSet;
 	
 	private int iSwSupplierId;
 	private SWSupplier swsSupplier;
@@ -53,6 +55,7 @@ public class SWArticle {
 	private SWSimilar swsSimilar;						// array
 	private SWRelated swrRelated;						// array
 	private LinkedList<SWArticleDetail> llSwadVariants;	// array -> LinkedList
+	private Boolean bHasVariants;
 	
 	
 	/**
@@ -61,19 +64,21 @@ public class SWArticle {
 	public SWArticle () {
 		// init Main Reference
 		this.strArticleNumber = "new";
-		this.strParentArticelNumber = "none";
+//		this.strParentArticelNumber = "none";
 		this.strSwArticleNumber = "new";
-		this.strSwParentArticleNumber = "none";
+//		this.strSwParentArticleNumber = "none";
 		
 		// init Objects
 		this.swtSwTax = new SWTax();
 		this.swadMainDetail = new SWArticleDetail();
+		this.bIsMainDetailSet = false;
 		this.swsSupplier = new SWSupplier();
 		this.swcsConfiguratorSet = new SWConfiguratorSet();
 		
 		// init Array / LinkedList
 		// TODO Array init
 		this.llSwadVariants = new LinkedList<SWArticleDetail>();
+		this.bHasVariants = false;
 	}
 
 
@@ -101,26 +106,23 @@ public class SWArticle {
 	/**
 	 * @return strParentArticelNumber
 	 */
-	public String getParentArticelNumber() {
+/*	public String getParentArticelNumber() {
 		return strParentArticelNumber;
 	}
-
-
+*/
 	/**
 	 * @param strParentArticelNumber das zu setzende Objekt strParentArticelNumber
 	 */
-	public void setParentArticelNumber(String strParentArticelNumber) {
+/*	public void setParentArticelNumber(String strParentArticelNumber) {
 		this.strParentArticelNumber = strParentArticelNumber;
 	}
-
-
+*/
 	/**
 	 * @return strSwArticleNumber
 	 */
 	public String getSwArticleNumber() {
 		return strSwArticleNumber;
 	}
-
 
 	/**
 	 * @param strSwArticleNumber das zu setzende Objekt strSwArticleNumber
@@ -135,18 +137,18 @@ public class SWArticle {
 	/**
 	 * @return strSwParentArticleNumber
 	 */
-	public String getSwParentArticleNumber() {
+/*	public String getSwParentArticleNumber() {
 		return strSwParentArticleNumber;
 	}
-
+*/
 
 	/**
 	 * @param strSwParentArticleNumber das zu setzende Objekt strSwParentArticleNumber
 	 */
-	public void setSwParentArticleNumber(String strSwParentArticleNumber) {
+/*	public void setSwParentArticleNumber(String strSwParentArticleNumber) {
 		this.strSwParentArticleNumber = strSwParentArticleNumber;
 	}
-
+*/
 
 	/**
 	 * @return strName
@@ -235,10 +237,12 @@ public class SWArticle {
 	 * @param swadMainDetail das zu setzende Objekt swadMainDetail
 	 */
 	public void setMainDetail(SWArticleDetail swadMainDetail) {
-		if (swadMainDetail != null)
+		if (swadMainDetail != null) {
 			this.swadMainDetail = swadMainDetail;
-		this.swadMainDetail.setStylenumber(this.strArticleNumber); // orig Stylenumber
-	}
+			this.swadMainDetail.setStylenumber(this.strArticleNumber); // orig Stylenumber
+			this.bIsMainDetailSet = true;
+		}
+	} // setMainDetail
 
 
 	/**
@@ -648,14 +652,12 @@ public class SWArticle {
 		this.swsSimilar = swsSimilar;
 	}
 
-
 	/**
 	 * @return swrRelated
 	 */
 	public SWRelated getRelated() {
 		return swrRelated;
 	}
-
 
 	/**
 	 * @param swrRelated das zu setzende Objekt swrRelated
@@ -664,24 +666,52 @@ public class SWArticle {
 		this.swrRelated = swrRelated;
 	}
 
-
 	/**
-	 * @return swadVariants
+	 * Returns a LinkedList of the Variants as SW ArticleDetail Objects.
+	 * If there are no Variants, the LinkedList is empty.
+	 * 
+	 * @return LinkedList<SWArticleDetail>
 	 */
 	public LinkedList<SWArticleDetail> getVariants() {
 		return this.llSwadVariants;
 	}
 
-
 	/**
 	 * @param swadVariants das zu setzende Objekt swadVariants
 	 */
 	public void addVariant(SWArticleDetail swadVariant) {
+		// set Supplier if needed
 		if (swadVariant.getSupplierNumber() == null || swadVariant.getSupplierNumber().equals(""))
 			swadVariant.setSupplierNumber(String.valueOf(this.iSwSupplierId));
-		this.llSwadVariants.add(swadVariant);
+		// if there is no MainDetail yet, set it
+		if (!this.isMainDetailSet()) {
+			this.setMainDetail(swadVariant);
+		}
+		else {
+			this.llSwadVariants.add(swadVariant);
+			this.setHasVariants(true);
+		}
 	}
 
+	/**
+	 * Indicates, if there are Variants for this Article.
+	 * 
+	 * @return true, if there are Variants - false else
+	 */
+	public Boolean hasVariants() {
+		return this.bHasVariants;
+	} // hasVariants
 	
+	private void setHasVariants (Boolean b) {
+		this.bHasVariants = b;
+	} // setHasVariants
+	
+	private Boolean isMainDetailSet () {
+		return this.bIsMainDetailSet;
+	}
+	
+	private void setIsMainDetailSet(Boolean b) {
+		this.bIsMainDetailSet = b;
+	} // steIsMainDetailSet
 	
 }

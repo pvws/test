@@ -22,7 +22,7 @@ public class PvwsCalendar {
 		if (date.get(Calendar.MONTH) + 1 < 10)
 			strDate += "0" + Integer.toString(date.get(Calendar.MONTH) + 1) + "-";
 		else
-			strDate += Integer.toString(date.get(Calendar.MONTH) + 1);
+			strDate += Integer.toString(date.get(Calendar.MONTH) + 1) + "-";
 		if (date.get(Calendar.DAY_OF_MONTH) < 10)
 			strDate += "0" + Integer.toString(date.get(Calendar.DAY_OF_MONTH)) + "-";
 		else
@@ -32,13 +32,19 @@ public class PvwsCalendar {
 		else
 			strDate += Integer.toString(date.get(Calendar.HOUR) + iAdd) + ":";
 		if (date.get(Calendar.MINUTE) < 10)
-			strDate += "0" + Integer.toString(date.get(Calendar.MINUTE)) + ".";
+			strDate += "0" + Integer.toString(date.get(Calendar.MINUTE)) + ":";
 		else
-			strDate += Integer.toString(date.get(Calendar.MINUTE)) + ".";
+			strDate += Integer.toString(date.get(Calendar.MINUTE)) + ":";
 		if (date.get(Calendar.SECOND) < 10)
-			strDate += "0" + Integer.toString(date.get(Calendar.SECOND));
+			strDate += "0" + Integer.toString(date.get(Calendar.SECOND)) + ".";
 		else
-			strDate += Integer.toString(date.get(Calendar.SECOND));
+			strDate += Integer.toString(date.get(Calendar.SECOND)) + ".";
+		if (date.get(Calendar.MILLISECOND) < 10)
+			strDate += "00" + Integer.toString(date.get(Calendar.MILLISECOND));
+		else if (date.get(Calendar.MILLISECOND) < 100)
+			strDate += "0" + Integer.toString(date.get(Calendar.MILLISECOND));
+		else
+			strDate += Integer.toString(date.get(Calendar.MILLISECOND));
 		
 		return strDate;
 	} // setDateTime
