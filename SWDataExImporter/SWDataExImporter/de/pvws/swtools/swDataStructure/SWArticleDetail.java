@@ -67,6 +67,8 @@ public class SWArticleDetail {
 	}
 
 	/**
+	 * Returns the original Style Number (Number of Master)
+	 * 
 	 * @return strStylenumber
 	 */
 	public String getStylenumber() {
@@ -74,6 +76,8 @@ public class SWArticleDetail {
 	}
 
 	/**
+	 * Sets the original Style Number (Number of Master)
+	 * 
 	 * @param strStylenumber das zu setzende Objekt strStylenumber
 	 */
 	public void setStylenumber(String strStylenumber) {
@@ -81,6 +85,8 @@ public class SWArticleDetail {
 	}
 
 	/**
+	 * Returns the original Article Number.
+	 * 
 	 * @return number
 	 */
 	public String getNumber() {
@@ -88,23 +94,29 @@ public class SWArticleDetail {
 	}
 
 	/**
+	 * Sets the original Article Number.
+	 * 
 	 * @param number das zu setzende Objekt number
 	 */
 	public void setNumber(String number) {
-		this.setSWNumber("ads_" + number);
+//		this.setSWNumber("ads_" + number);
 		this.strNumber = number;
 	}
 
 	/**
+	 * Returns the SW Article Number (Order Number).
 	 * 
 	 * @return
 	 */
 	public String getSWNumber() {
-		return strSWNumber;
+		if (this.strSWNumber == null || this.strSWNumber == "")
+			return "ads_" + this.strNumber;
+		else
+			return strSWNumber;
 	}
 	
 	/**
-	 * 
+	 * Sets the SW Article Number (Order Number).
 	 * @param number
 	 */
 	public void setSWNumber(String number) {

@@ -126,6 +126,7 @@ public class ExportSWArticleToCsv {
 	public boolean doExport () {
 		FileWriter fw;
 		Iterator<SWArticle> iA;			// iterator over Article Data Set
+		SWArticle swa;
 		
 		if (this.strFilename == null || this.strFilename.equals(""))
 			this.strFilename = "swArticle_" + strDate + ".csv";
@@ -147,7 +148,14 @@ public class ExportSWArticleToCsv {
 			// write data set
 			iA = this.llSwa.iterator();
 			while (iA.hasNext()) {
-				fw.write(this.getCsvString(iA.next()));
+				swa = iA.next();
+				// sort out objects with wrong Numbers
+				if (swa.getMainDetail().getSWNumber().equals("ads_null"))
+					continue;
+				// sort out Objects with no Price Data
+				if (swa.getMainDetail().getPrice(1).getPrice() > 99999.00)
+					continue;
+				fw.write(this.getCsvString(swa));
 				fw.flush();
 			} // while iA.hasNext()
 			
@@ -208,29 +216,63 @@ public class ExportSWArticleToCsv {
 		SWArticleDetail swad;
 
 		strCsv = "";
-		iAD = swa.getVariants().iterator();
 		
-		while (iAD.hasNext()) {
-			swad = iAD.next();
-			if (this.bOrderNumber)
-				strCsv += swad.getSWNumber();
-			if (this.bMainNumber)
-				strCsv += ";" + swa.getSwArticleNumber();
-			if (this.bName)
-				strCsv += ";" + swa.getName();
-			if (this.bSupplier)
-				strCsv += ";" + swa.getSupplier().getName();
-			if (this.bTax)
-				strCsv += ";" + swa.getSwTax().getSwTax();
-			if (this.bPrice)
-				strCsv += ";" + String.valueOf(swad.getPrice(1).getPrice());
-			
-			strCsv += "\r\n";
-		} // while iAD.hasNext
+		if (swa != null) {
+			// Data Set ( Line of Main Detail
+			swad = swa.getMainDetail();
+			if (swad != null) {
+				strCsv += this.getCsvSwad(swad, swa, true);
+				strCsv += "\r\n";
+			}
+
+			// Data Sets / Lines of Variants
+			iAD = swa.getVariants().iterator();
+			while (iAD.hasNext()) {
+				swad = iAD.next();
+				if (swad.getPrice(1).getPrice() > 99999.0)
+					continue;
+				strCsv += this.getCsvSwad(swad, swa, false);
+				strCsv += "\r\n";
+			} // while iAD.hasNext
+		}
 		
 		return strCsv;
 	} // getCsvString
 	
+	/**
+	 * Returns the SWAD as CSV - Line (Data Set) without closing Linefeed.
+	 * 
+	 * @param swad
+	 * @return
+	 */
+	private String getCsvSwad (SWArticleDetail swad, SWArticle swa, Boolean isMainDetail) {
+		String strLine = "";
+		
+		if (this.bOrderNumber)
+			strLine += swad.getSWNumber();
+		// Main Detail gets no main number but empty field
+		if (this.bMainNumber && isMainDetail)
+			strLine += ";";
+		// Variant gets main number => SW Article Number of Main Detail
+		if (this.bMainNumber && !isMainDetail)
+			strLine += ";" + swa.getMainDetail().getSWNumber();
+		if (this.bName)
+			strLine += ";" + swa.getName();
+		if (this.bSupplier)
+			strLine += ";" + swa.getSupplier().getName();
+		if (this.bTax)
+			strLine += ";" + swa.getSwTax().getSwTax();
+		if (this.bPrice)
+			strLine += ";" + String.valueOf(swad.getPrice(1).getPrice());
+
+		return strLine;
+	}
+
+	/**
+	 * Returns the Headline as CSV with closing Linefeed.
+	 * 
+	 * @return
+	 */
 	private String getCsvHeadLine () {
 		String strHL;
 		

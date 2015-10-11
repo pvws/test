@@ -148,8 +148,8 @@ public class ImportDWPriceCat extends DefaultHandler {
 	public void endElement (String namespaceURI,
 							String localeName,
 							String qName) throws SAXException {
-		String strAName;
-		String strAValue;
+//		String strAName;
+//		String strAValue;
 		
 //		System.out.println("Ende des Elementes " + localeName);
 
@@ -197,7 +197,9 @@ public class ImportDWPriceCat extends DefaultHandler {
 		SWPrice swp;
 		SWArticle swa;
 		SWArticleDetail swad;
+		String ean;
 		
+		System.out.println("Anzahl PriceData : " + this.llSWPrice.size());
 		// Hashtable Price <ArticleId, swPrice>
 		htPrice = new Hashtable<String, SWPrice>();
 		iPrice = this.llSWPrice.iterator();
@@ -210,10 +212,19 @@ public class ImportDWPriceCat extends DefaultHandler {
 		iSwa = this.llSWArticle.iterator();
 		while (iSwa.hasNext()) {
 			swa = iSwa.next();
+			// Price Data to Main Detail
+			if ((ean = swa.getMainDetail().getEan()) == null)
+				continue;
+			swp = htPrice.get(ean);
+			if (swp != null)
+				swa.getMainDetail().addPrice(swp);
+			// Now for Variants
 			iSwad = swa.getVariants().iterator();
 			while (iSwad.hasNext()) {
 				swad = iSwad.next();
-				swp = htPrice.get(swad.getEan());
+				if ((ean = swad.getEan()) == null)
+					continue;
+				swp = htPrice.get(ean);
 				if (swp != null) {
 					swad.addPrice(swp);
 				}

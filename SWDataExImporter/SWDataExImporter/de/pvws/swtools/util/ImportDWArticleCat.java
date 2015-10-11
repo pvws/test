@@ -13,8 +13,13 @@ import java.util.*;
 //import java.io.*;
 
 /**
- * @author PV KT
- *
+ * This class does the work importing a Demandware Master Catalog XML-Document and
+ * mapping Data to Shopware Article Data Structure.
+ * 
+ * Currently missing is handling of image-Data.
+ * Should be added soon.
+ *  
+ * @author PV WS
  */
 public class ImportDWArticleCat extends DefaultHandler {
 	private LinkedList<SWArticle> llSWArticle;
@@ -30,7 +35,7 @@ public class ImportDWArticleCat extends DefaultHandler {
 
 	
 	/**
-	 * 
+	 * Init the Instance with the an empty LinkedList for Shopware Article Data Object.
 	 */
 	public ImportDWArticleCat () {
 		this.llSWArticle = new LinkedList<SWArticle>();
@@ -38,15 +43,29 @@ public class ImportDWArticleCat extends DefaultHandler {
 	}
 
 	/**
+	 * Init the Instance with the given LinkedList for Shopware Article Data Object.
 	 * 
+	 * @param llSWArticle
 	 */
 	public ImportDWArticleCat (LinkedList<SWArticle> llSWArticle) {
 		this.llSWArticle = llSWArticle;
 		this.llSWArticle.clear();
 		this.llSWArticleDetail = new LinkedList<SWArticleDetail>();
 	}
+
+	/**
+	 * Returns the LinkedList with the Shopware Article Objects.
+	 * Would be empty before import was done.
+	 * 
+	 * @return LinkedList of Shopware Article
+	 */
+	public LinkedList<SWArticle> getSWArticleList () {
+		return this.llSWArticle;
+	}
 	
 	/**
+	 * Initiates the import of an Demandware xml-MasterData Catalog defined in path.
+	 * The Data-Structure will be mapped to the Shopware Data-Structure.
 	 * 
 	 * @param path
 	 */
@@ -67,12 +86,18 @@ public class ImportDWArticleCat extends DefaultHandler {
 		}
 	}
 	
+	/**
+	 * Does the work when the begin of the XML-Document is reached
+	 */
 	@Override
 	public void startDocument () throws SAXException {
 		System.out.println("Beginn des XML-Dokumentes");
 
 	}
 	
+	/**
+	 * Does the work when the end of the XML-Document is reached
+	 */
 	@Override
 	public void endDocument () throws SAXException {
 		System.out.println("Ende des XML-Dokumentes");
@@ -81,6 +106,9 @@ public class ImportDWArticleCat extends DefaultHandler {
 		System.out.println("Sortieren beendet");
 	}
 	
+	/**
+	 * Does the work when a opening Tag is reached
+	 */
 	@Override
 	public void startElement (String namespaceURI,
 								String localeName,
@@ -144,7 +172,6 @@ public class ImportDWArticleCat extends DefaultHandler {
 			for (int i = 0; i < atts.getLength(); i++) {
 				switch (atts.getQName(i)) {
 				case "value":
-//					this.swcoConfigOption = new SWConfiguratorOption(this.swcgConficGroup.getiSwId(), atts.getValue(i).substring(3), Integer.parseInt(atts.getValue(i).substring(0, 2)));
 					this.swcoConfigOption = new SWConfiguratorOption(this.swcgConficGroup.getiSwId());
 					this.bIsDESet = false;
 					break;
@@ -157,6 +184,9 @@ public class ImportDWArticleCat extends DefaultHandler {
 		
 	}
 	
+	/**
+	 * Does the work when a closing Tag is reached
+	 */
 	@Override
 	public void endElement (String namespaceURI,
 							String localeName,
@@ -170,11 +200,14 @@ public class ImportDWArticleCat extends DefaultHandler {
 		switch (localeName) {
 			case "product":
 				if (this.bIsMaster) { // Master -> swad into swa & swa into LinkedList
-					swa.setMainDetail(swad);
-					this.llSWArticle.add(swa);
+//					swa.setMainDetail(swad);
+					if (swa.getArticleNumber() != null && swa.getName() != null) {
+						this.llSWArticle.add(swa);
+					}
 				}
 				else { // Variant -> persist swad; connect with master after import completion
-					this.llSWArticleDetail.add(swad);
+					if (swad.getNumber() != null && !swad.getNumber().equals("null") && !swad.getNumber().equals("ads_null"))
+						this.llSWArticleDetail.add(swad);
 				}
 				break;
 			case "ean":
@@ -302,6 +335,9 @@ public class ImportDWArticleCat extends DefaultHandler {
 		} // switch (localeName)
 	}
 	
+	/**
+	 * Captures the between opening and closing Tag
+	 */
 	@Override
 	public void characters (char[] ch,
 							int s,
@@ -317,38 +353,33 @@ public class ImportDWArticleCat extends DefaultHandler {
 	 * Sorts the ArticleDetail DataSets into the regarding Article DataSets
 	 */
 	private void sortArticleData () {
-		Iterator<SWArticleDetail> i;
-		Iterator<SWArticle> ii;
+		Iterator<SWArticleDetail> iSwad;
+		Iterator<SWArticle> iSwa;
 		String parent;
 		SWArticleDetail swad;
 		SWArticle swa;
 		Hashtable<String,SWArticle> htSWA;
 
+		System.out.println("Anzahl SWAD : " + this.llSWArticleDetail.size());
+
 		// Aufbau Hashtable <Stylenumber, swa>
+		// für schnellen Zugriff
 		htSWA = new Hashtable<String,SWArticle>();
-		ii = this.llSWArticle.iterator();
-		while (ii.hasNext()) {
-			swa = ii.next();
-			htSWA.put(swa.getArticleNumber(), swa);
-		}
+		iSwa = this.llSWArticle.iterator();
+		while (iSwa.hasNext()) {
+			swa = iSwa.next();
+			if (swa.getArticleNumber() != null)
+				htSWA.put(swa.getArticleNumber(), swa);
+		} // while ii.hasNext()
 
-		i = this.llSWArticleDetail.iterator();
-		while (i.hasNext()) {
-			swad = i.next();
-			parent = swad.getStylenumber();
-			
-			(htSWA.get(parent)).addVariant(swad);
-
-			// Extrem inperformant!!! mit Hashtable arbeiten !!!
-//			ii = this.llSWArticle.iterator();
-//			while (ii.hasNext()) {
-//				swa = ii.next();
-//				if (swa.getArticleNumber().equals(parent)) {
-//					swa.addVariant(swad);
-//				}
-//			}
-			
-			
-		}
+		// Article Detail Objekte in Article Objekte einsortieren
+		// Verteilung auf mainDetail & Varianten im Article Objekt
+		iSwad = this.llSWArticleDetail.iterator();
+		while (iSwad.hasNext()) {
+			swad = iSwad.next();
+			if ((parent = swad.getStylenumber()) != null)
+				if (htSWA.get(parent) != null)
+					(htSWA.get(parent)).addVariant(swad);
+		} // while i.hasNext()
 	}
 }
