@@ -36,8 +36,8 @@ public class Main {
 			System.out.println ("Beginn MasterCat einlesen : " + PvwsCalendar.getDateTime());
 			//dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/mastercat_2products.xml");
 			//dwACat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/mastercat_1Style.xml");
-			//dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/mastercat_1style.xml");
-			dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/demo_mastercat_150924.xml");
+			dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/mastercat_1style.xml");
+			//dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/demo_mastercat_150924.xml");
 			//dwACat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/mastercat_150924.xml");
 			System.out.println ("Ende MasterCat einlesen : " + PvwsCalendar.getDateTime());
 			System.out.println();

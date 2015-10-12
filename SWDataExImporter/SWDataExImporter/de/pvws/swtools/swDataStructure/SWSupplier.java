@@ -23,8 +23,12 @@ public class SWSupplier {
 	public SWSupplier () {
 		this.iSwId = 1;
 		this.strName = "arvato";
+		this.strImage = "";
 		this.strLink = "http://www.arvato.com";
-		
+		this.strDescription = "";
+		this.strMetaTitle = "";
+		this.strMetaDescription = "";
+		this.strMetaKeywords = "";
 	}
 
 	/**

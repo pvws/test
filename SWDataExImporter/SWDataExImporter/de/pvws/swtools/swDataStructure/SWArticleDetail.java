@@ -10,37 +10,37 @@ import java.util.*;
  *
  */
 public class SWArticleDetail {
-	private String strStylenumber;		// Parent original product-id
-	private String strNumber;			// original product-id
-	private String strSWNumber;			// ordernumber
-	private String strSupplierNumber;
-	private String strAdditionalText;
-	private String strWeight;
-	private String strWidth;
-	private String strLen;
-	private String strHeight;
-	private String strEan;
-	private String strPurchaseUnit;
-	private String strDescriptionLong;
-	private String strReferenceUnit;
-	private String strPackUnit;
-	private String strShippingTime;
+	private String strStylenumber = "";		// Parent original product-id
+	private String strNumber = "";			// original product-id
+	private String strSWNumber = "";			// ordernumber
+	private String strSupplierNumber = "";
+	private String strAdditionalText = "";
+	private String strWeight = "";
+	private String strWidth = "";
+	private String strLen = "";
+	private String strHeight = "";
+	private String strEan = "";
+	private String strPurchaseUnit = "";
+	private String strDescriptionLong = "";
+	private String strReferenceUnit = "";
+	private String strPackUnit = "";
+	private String strShippingTime = "";
 	private LinkedList<SWPrice> llSwpPrice;								// array
 	private LinkedList<SWConfiguratorOption> llSwcoConfiguratorOptions;	// array
 	private SWArticleAttribute swaaAttribute;
-	private int iSwId;					// PK
-	private int iSwArticleId;			// FK / swArticle / swParent
-	private int iSwUnitId;				// FK
-	private int iKind;
-	private int iInStock;
-	private int iPosition;
-	private int iMinPurchase;
-	private int iPurchaseSteps;
-	private int iMaxPurchase;
-	private String strReleaseDate;
-	private Boolean bActive;
-	private Boolean bShippingFree;
-	private String taxClass;
+	private int iSwId = 0;					// PK
+	private int iSwArticleId = 0;			// FK / swArticle / swParent
+	private int iSwUnitId = 0;				// FK
+	private int iKind = 0;
+	private int iInStock = 99;
+	private int iPosition = 1;
+	private int iMinPurchase = 1;
+	private int iPurchaseSteps = 1;
+	private int iMaxPurchase = 99999;
+	private String strReleaseDate = "";
+	private Boolean bActive = false;
+	private Boolean bShippingFree = false;
+	private String taxClass = "";
 	
 	private Boolean bPriceSet;
 	
@@ -72,7 +72,10 @@ public class SWArticleDetail {
 	 * @return strStylenumber
 	 */
 	public String getStylenumber() {
-		return strStylenumber;
+		if (this.strStylenumber != null)
+			return strStylenumber;
+		else 
+			return "";
 	}
 
 	/**
@@ -81,7 +84,10 @@ public class SWArticleDetail {
 	 * @param strStylenumber das zu setzende Objekt strStylenumber
 	 */
 	public void setStylenumber(String strStylenumber) {
-		this.strStylenumber = strStylenumber;
+		if (this.strStylenumber != null)
+			this.strStylenumber = strStylenumber;
+		else
+			this.strStylenumber = "";
 	}
 
 	/**
@@ -90,7 +96,10 @@ public class SWArticleDetail {
 	 * @return number
 	 */
 	public String getNumber() {
-		return strNumber;
+		if (this.strNumber != null)
+			return strNumber;
+		else 
+			return "";
 	}
 
 	/**

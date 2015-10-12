@@ -4,18 +4,11 @@
 package de.pvws.swtools.util;
 
 import de.pvws.swtools.swDataStructure.*;
-import de.pvws.swtools.swRestDataStructure.SwRestArticle;
+import de.pvws.swtools.swRestDataStructure.SwArticleToJson;
 import de.pvws.swtools.util.REST.*;
 
 import java.util.*;
 
-<<<<<<< HEAD
-import javax.json.*;
-import javax.json.spi.*;
-
-
-=======
->>>>>>> refs/remotes/pvws/Rest-ArticleToSW
 /**
  * 
  * @author PV KT
@@ -136,7 +129,7 @@ public class ExportSWArticleToRest {
 		itSwa = this.llSwaExec.iterator();
 		while (itSwa.hasNext()) {
 			swa = itSwa.next();
-			strJson = SwRestArticle.buildJsonArticle(swa);
+			strJson = SwArticleToJson.buildJsonArticle(swa);
 
 			PushArticleToSW.doPush(strJson);
 		} // while itSwa.hasNext()

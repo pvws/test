@@ -91,14 +91,11 @@ public class PullArticleFromSW {
 		this.invB.accept("application/json");
 		this.invB.acceptEncoding("charset=utf-8");
 		
-		// Post --> create
-		// Put --> update
 		this.resp = wtHost.request().get();
 
 		this.strRespStatus = String.valueOf(this.resp.getStatus());
 		this.strRespStatusInfo = this.resp.getStatusInfo().toString();
 		this.strRespEntity = this.resp.readEntity(String.class);
-		
 		
 		return this.strRespEntity;
 	}
