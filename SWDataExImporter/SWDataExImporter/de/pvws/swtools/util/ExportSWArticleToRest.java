@@ -107,7 +107,7 @@ public class ExportSWArticleToRest {
 		
 		this.llSwaOld = new LinkedList<SWArticle>();
 		
-//		this.strSWDataJsonOld = PullArticleFromSW.doPull();
+		this.strSWDataJsonOld = PullArticleFromSW.doPull();
 	} // doPull()
 	
 	/**
