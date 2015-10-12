@@ -24,7 +24,7 @@ public class PushArticleToSW {
 		
 	}
 	
-	public static void doPush () {
+	public static void doPush (String strJson) {
 		Client client;
 		HttpAuthenticationFeature httpAuthFeat;
 		WebTarget wtHost;

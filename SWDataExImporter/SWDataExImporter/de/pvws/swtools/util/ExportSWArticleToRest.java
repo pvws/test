@@ -4,14 +4,18 @@
 package de.pvws.swtools.util;
 
 import de.pvws.swtools.swDataStructure.*;
+import de.pvws.swtools.swRestDataStructure.SwRestArticle;
 import de.pvws.swtools.util.REST.*;
 
 import java.util.*;
 
+<<<<<<< HEAD
 import javax.json.*;
 import javax.json.spi.*;
 
 
+=======
+>>>>>>> refs/remotes/pvws/Rest-ArticleToSW
 /**
  * 
  * @author PV KT
@@ -118,24 +122,25 @@ public class ExportSWArticleToRest {
 	 */
 	private void doPush() {
 		Iterator<SWArticle> itSwa;
-		Iterator<SWArticleDetail> itSwad;
 		SWArticle swa;
-		SWArticleDetail swad;
 		
+		String strJson;
+
+		// Exit if something is wrong
 		if (this.llSwaNew == null || this.llSwaExec == null) {
 			this.bSuccess = false;
 			return;
 		}
 		
+		// build JSON and push to Shop
 		itSwa = this.llSwaExec.iterator();
 		while (itSwa.hasNext()) {
 			swa = itSwa.next();
-			itSwad = swa.getVariants().iterator();
-			while (itSwad.hasNext()) {
-				swad = itSwad.next();
-				this.SwadToJson(swad, swa);
-			} // whileitSwas.hasNext()
+			strJson = SwRestArticle.buildJsonArticle(swa);
+
+			PushArticleToSW.doPush(strJson);
 		} // while itSwa.hasNext()
+		
 		
 	} // doPush()
 	
@@ -143,6 +148,8 @@ public class ExportSWArticleToRest {
 	 * Calculates the llSwaExec from llSwaNew and llSwaOld regarding the strMode 
 	 */
 	private void doCompute() {
+
+		// Exit if something is wrong
 		if (this.llSwaNew == null || this.llSwaOld == null) {
 			this.bSuccess = false;
 			return;
@@ -154,43 +161,6 @@ public class ExportSWArticleToRest {
 		this.llSwaExec = this.llSwaNew;
 		
 	} //doCompute()
-
-	/**
-	 * 
-	 * @param swad
-	 * @return The SWAD translated to JSON as String
-	 */
-	private String SwadToJson (SWArticleDetail swad, SWArticle swa) {
-		JsonWriter jw;
-		JsonBuilderFactory jf;
-		JsonObject jo;
-		JsonArray ja;
-		JsonArray jaSwa;
-		
-		String strJson = "";
-		
-		try {
-			jf = Json.createBuilderFactory(null);
-			//jaSwa = jf.createArrayBuilder().build();
-
-			jo = Json.createObjectBuilder().add("name", "Name")
-					.add("name", swa.getName())
-					.build();
-			
-//			jaSwa = Json.createArrayBuilder().add(jo).build();
-//			ja.add(jf.createObjectBuilder().add("name", swa.getName()).build());
-			jaSwa = Json.createArrayBuilder().add(jo).build();
-
-			strJson = jaSwa.toString();
-		}
-		catch (Exception e){
-			System.out.println (e);
-		}
-		
-		System.out.println(strJson);
-		return strJson;
-	}
-	
 	
 	/**
 	 * @return bSuccess
@@ -205,4 +175,5 @@ public class ExportSWArticleToRest {
 	private void setbSuccess(Boolean bSuccess) {
 		this.bSuccess = bSuccess;
 	}
+	
 }
