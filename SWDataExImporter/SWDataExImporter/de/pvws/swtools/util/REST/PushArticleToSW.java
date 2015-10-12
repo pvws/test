@@ -24,7 +24,7 @@ public class PushArticleToSW {
 		
 	}
 	
-	public static void doPush () {
+	public static void doPush (String strJson) {
 		Client client;
 		HttpAuthenticationFeature httpAuthFeat;
 		WebTarget wtHost;
@@ -32,19 +32,20 @@ public class PushArticleToSW {
 		Response resp;
 		
 		client = ClientBuilder.newClient();
-//		client.property("user", "api");
-//		client.property("password","password");
 
 		httpAuthFeat = HttpAuthenticationFeature.digest("api", "s5CPwkoPRlubpHGtpBuoVNRixoJwzb4rIUcTltOv");
 		client.register(httpAuthFeat);
 
-		wtHost = client.target("http://shopware-dev/api/article");
+		wtHost = client.target("http://shopware-dev/api/articles");
 		invB =  wtHost.request();
 		invB.accept(MediaType.APPLICATION_JSON_TYPE);
 		invB.acceptEncoding("charset=utf-8");
-		// Content-Type: application/json; charset=utf-8
+
+		resp = wtHost.request().post(Entity.entity(strJson, MediaType.APPLICATION_JSON_TYPE));
 		
-		resp = wtHost.request().get();
+		System.out.println("POST-Status:     " + resp.getStatus());
+		System.out.println("POST-StatusInfo: " + resp.getStatusInfo());
+		System.out.println("POST-Response:   " + resp.readEntity(String.class));
 	}
 
 }

@@ -9,13 +9,12 @@ import java.util.*;
  * Represents the Shopware Article Data Structure.
  * 
  * @author PV WS
- *
  */
 public class SWArticle {
 	private String strArticleNumber;			// extern
-	private String strParentArticelNumber;		// extern / obsolet
+//	private String strParentArticelNumber;		// extern / obsolet
 	private String strSwArticleNumber;
-	private String strSwParentArticleNumber;	// obsolet
+//	private String strSwParentArticleNumber;	// obsolet
 
 	private String strName;
 	private String strDescription;
