@@ -41,6 +41,7 @@ public class SWArticleDetail {
 	private Boolean bActive = false;
 	private Boolean bShippingFree = false;
 	private String taxClass = "";
+	private LinkedList<SWCategory> llSwcCategories;	// isn't member of SW Data Structure
 	
 	private Boolean bPriceSet;
 	
@@ -64,6 +65,7 @@ public class SWArticleDetail {
 		this.llSwpPrice.add(new SWPrice());
 		this.bPriceSet = false;
 		this.llSwcoConfiguratorOptions = new LinkedList<SWConfiguratorOption>();
+		this.llSwcCategories = new LinkedList<SWCategory>();
 	}
 
 	/**
@@ -576,5 +578,12 @@ public class SWArticleDetail {
 		this.taxClass = taxClass;
 	}
 	
+	public void addCategories (SWCategory swCat) {
+		this.llSwcCategories.add(swCat);
+	}
+	
+	public LinkedList<SWCategory> getCategories () {
+		return this.llSwcCategories;
+	}
 
 }

@@ -36,17 +36,17 @@ public class Main {
 			System.out.println ("Beginn MasterCat einlesen : " + PvwsCalendar.getDateTime());
 			//dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/mastercat_2products.xml");
 			//dwACat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/mastercat_1Style.xml");
-			dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/mastercat_1style.xml");
+			//dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/mastercat_1style.xml");
 			//dwACat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/demo_mastercat_150924.xml");
-			//dwACat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/mastercat_150924.xml");
+			dwACat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/mastercat_150924.xml");
 			System.out.println ("Ende MasterCat einlesen : " + PvwsCalendar.getDateTime());
 			System.out.println();
 			
 			// import Price Data
 			System.out.println ("Beginn PriceCat List einlesen : " + PvwsCalendar.getDateTime());
 			dwPCat = new ImportDWPriceCat (llSWArticle);
-			dwPCat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/demoshop-de-listprice.xml");
-			//dwPCat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/demoshop-de-listprice.xml");
+			//dwPCat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/demoshop-de-listprice.xml");
+			dwPCat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/demoshop-de-listprice.xml");
 			System.out.println ("Ende PriceCat List einlesen : " + PvwsCalendar.getDateTime());
 			System.out.println();
 			System.out.println ("Beginn PriceCat Sale einlesen : " + PvwsCalendar.getDateTime());

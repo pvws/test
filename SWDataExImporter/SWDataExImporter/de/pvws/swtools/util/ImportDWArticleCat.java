@@ -223,6 +223,8 @@ public class ImportDWArticleCat extends DefaultHandler {
 							String qName) throws SAXException {
 		String strAName;
 		String strAValue;
+		SWConfiguratorGroup swcg;
+		SWConfiguratorOption swco;
 		
 //		System.out.println("Ende des Elementes " + localeName);
 
@@ -323,15 +325,23 @@ public class ImportDWArticleCat extends DefaultHandler {
 							}
 							break;
 						case "color":
+							swcg = new SWConfiguratorGroup("color");
+							swco = new SWConfiguratorOption(swcg);
+							swco.setName(strEValue.substring(3, strEValue.length()));
+							this.swad.addConfiguratorOptions(swco);
 							this.swad.getAttribute().setAttr1(strAValue + "|" + strEValue);
 							break;
 						case "colorCode":
 							this.swad.getAttribute().setAttr2(strAValue + "|" + strEValue);
 							break;
-						case "searchColorId":
+						case "searchColorID":
 							this.swad.getAttribute().setAttr3(strAValue + "|" + strEValue);
 							break;
 						case "size":
+							swcg = new SWConfiguratorGroup("size");
+							swco = new SWConfiguratorOption(swcg);
+							swco.setName(strEValue); //(strEValue.substring(3, strEValue.length()-1));
+							this.swad.addConfiguratorOptions(swco);
 							this.swad.getAttribute().setAttr4(strAValue + "|" + strEValue);
 							break;
 						} // switch (attribute-Value)
@@ -364,6 +374,7 @@ public class ImportDWArticleCat extends DefaultHandler {
 			case "classification-category":
 				this.swcCat.setId(this.strEValue);
 				this.swa.addCategories(this.swcCat);
+				this.swad.addCategories(this.swcCat);
 				break;
 			case "http-url":
 				this.strDwImagePath = this.strEValue;

@@ -78,7 +78,7 @@ public class SWConfiguratorOption {
 	 * 
 	 * @return
 	 */
-	public SWConfiguratorGroup getSWConfiguratorGroup () {
+	public SWConfiguratorGroup getSwConfiguratorGroup () {
 		return this.swcgConfigGroup;
 	}
 

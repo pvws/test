@@ -635,7 +635,19 @@ public class SWArticle {
 	/**
 	 * @return swcCategories
 	 */
+	@SuppressWarnings("unchecked")
 	public LinkedList<SWCategory> getCategories() {
+//		Iterator<SWArticleDetail> iSwad;
+//		LinkedList<SWCategory> llSwc;
+//		
+//		llSwc = (LinkedList<SWCategory>) this.llSwcCategories.clone();
+//		
+//		iSwad = this.llSwadVariants.iterator();
+//		while (iSwad.hasNext()) {
+//			llSwc.addAll(iSwad.next().getCategories());
+//		}
+//
+//		return llSwc;
 		return this.llSwcCategories;
 	}
 

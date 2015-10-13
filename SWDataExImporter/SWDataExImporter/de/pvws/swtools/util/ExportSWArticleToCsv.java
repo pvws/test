@@ -275,64 +275,15 @@ public class ExportSWArticleToCsv {
 		if (this.bPrice)
 			strLine += ";" + String.valueOf(swad.getPrice(1).getPrice());
 		if (this.bCategories) {
-			SWCategory swcCat;
-			Iterator<SWCategory> iSwcCat;
-			String str = ";";
-			
-			iSwcCat = swa.getCategories().iterator();
-			while (iSwcCat.hasNext()) {
-				swcCat = iSwcCat.next();
-				str += swcCat.getId();
-				str += "|";
-			}
-			if (str.length() > 2)
-				strLine += str.substring(0, str.length()-1);
-			else
-				strLine += str;
-		} // if categories
+			strLine += this.createCategoryString(swa, swad);
+		}
 
 		if (this.bConfigOption) {
-			strLine += ";" + "1"; // configuratorsetID, must be set, but without function
-			strLine += ";" + ""; // configuratortype, not used yet
-			// strLine += ";" + "configuratorOption"; // configuratorOption, separated by pipe
-			Iterator<SWConfiguratorOption> i;
-			SWConfiguratorOption swco;
-			String str = ";";
-			i = swad.getConfiguratorOptions().iterator();
-			while (i.hasNext()) {
-				swco = i.next();
-				str += swco.getSwGroupId();
-				str += ":";
-				str += swco.getName();
-				str += "|";
-			}
-			if (str.length() > 3)
-				strLine += str.substring(0, str.length()-2);
-			else
-				strLine += str;
+			strLine += this.createConfigFields(swad);
 		} // if configOptions
 		
 		if (this.bAttributes) {
-			strLine += ";" + swad.getAttribute().getAttr1();
-			strLine += ";" + swad.getAttribute().getAttr2();
-			strLine += ";" + swad.getAttribute().getAttr3();
-			strLine += ";" + swad.getAttribute().getAttr4();
-			strLine += ";" + swad.getAttribute().getAttr5();
-			strLine += ";" + swad.getAttribute().getAttr6();
-			strLine += ";" + swad.getAttribute().getAttr7();
-			strLine += ";" + swad.getAttribute().getAttr8();
-			strLine += ";" + swad.getAttribute().getAttr9();
-			strLine += ";" + swad.getAttribute().getAttr10();
-			strLine += ";" + swad.getAttribute().getAttr11();
-			strLine += ";" + swad.getAttribute().getAttr12();
-			strLine += ";" + swad.getAttribute().getAttr13();
-			strLine += ";" + swad.getAttribute().getAttr14();
-			strLine += ";" + swad.getAttribute().getAttr15();
-			strLine += ";" + swad.getAttribute().getAttr16();
-			strLine += ";" + swad.getAttribute().getAttr17();
-			strLine += ";" + swad.getAttribute().getAttr18();
-			strLine += ";" + swad.getAttribute().getAttr19();
-			strLine += ";" + swad.getAttribute().getAttr20();
+			strLine += this.createArticleAttributesString(swad);
 		}
 		
 		
@@ -415,4 +366,83 @@ public class ExportSWArticleToCsv {
 		strHL += "\r\n";
 		return strHL;
 	} // getCstHeadLine
+	
+	private String createCategoryString (SWArticle swa, SWArticleDetail swad) {
+		SWCategory swcCat;
+		Iterator<SWCategory> iSwcCat;
+		String strField = ";";
+		String str = "";
+		
+		// Categories from Master
+		iSwcCat = swa.getCategories().iterator();
+		while (iSwcCat.hasNext()) {
+			swcCat = iSwcCat.next();
+			str += swcCat.getId();
+			str += "|";
+		}
+
+		// Categories from Article
+		iSwcCat = swad.getCategories().iterator();
+		while (iSwcCat.hasNext()) {
+			swcCat = iSwcCat.next();
+			str += swcCat.getId();
+			str += "|";
+		}
+		if (str.length() > 2)
+			strField += str.substring(0, str.length()-1);
+
+		return strField;
+	} // createCategoryString()
+
+	private String createConfigFields(SWArticleDetail swad) {
+		String strFields = "";
+		
+		strFields += ";" + "1"; // configuratorsetID, must be set, but without function
+		strFields += ";" + ""; // configuratortype, not used yet
+		// strLine += ";" + "configuratorOption"; // configuratorOption, separated by pipe
+		Iterator<SWConfiguratorOption> i;
+		SWConfiguratorOption swco;
+		String str = ";";
+		i = swad.getConfiguratorOptions().iterator();
+		while (i.hasNext()) {
+			swco = i.next();
+			str += swco.getSwConfiguratorGroup().getName();
+			str += ":";
+			str += swco.getName();
+			str += "|";
+		}
+		if (str.length() > 3)
+			strFields += str.substring(0, str.length()-1);
+		else
+			strFields += str;
+
+		return strFields;
+	} // createConfigFields()
+
+	private String createArticleAttributesString(SWArticleDetail swad) {
+		String strField = "";
+		
+		strField += ";" + swad.getAttribute().getAttr1();
+		strField += ";" + swad.getAttribute().getAttr2();
+		strField += ";" + swad.getAttribute().getAttr3();
+		strField += ";" + swad.getAttribute().getAttr4();
+		strField += ";" + swad.getAttribute().getAttr5();
+		strField += ";" + swad.getAttribute().getAttr6();
+		strField += ";" + swad.getAttribute().getAttr7();
+		strField += ";" + swad.getAttribute().getAttr8();
+		strField += ";" + swad.getAttribute().getAttr9();
+		strField += ";" + swad.getAttribute().getAttr10();
+		strField += ";" + swad.getAttribute().getAttr11();
+		strField += ";" + swad.getAttribute().getAttr12();
+		strField += ";" + swad.getAttribute().getAttr13();
+		strField += ";" + swad.getAttribute().getAttr14();
+		strField += ";" + swad.getAttribute().getAttr15();
+		strField += ";" + swad.getAttribute().getAttr16();
+		strField += ";" + swad.getAttribute().getAttr17();
+		strField += ";" + swad.getAttribute().getAttr18();
+		strField += ";" + swad.getAttribute().getAttr19();
+		strField += ";" + swad.getAttribute().getAttr20();
+
+		return strField;
+	}
 } // class ExportSWArticleToCsv
