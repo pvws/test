@@ -10,6 +10,7 @@ package de.pvws.swtools.swDataStructure;
 public class SWCategory {
 	private int iSwId;		// PK
 	private String strName;
+	private String iId;
 	
 	/**
 	 * 
@@ -46,6 +47,19 @@ public class SWCategory {
 		this.strName = strName;
 	}
 	
+	/**
+	 * @return iId
+	 */
+	public String getId() {
+		return this.iId;
+	}
+
+	/**
+	 * @param iId das zu setzende Objekt iId
+	 */
+	public void setId(String iId) {
+		this.iId = iId;
+	}
 	
 
 }

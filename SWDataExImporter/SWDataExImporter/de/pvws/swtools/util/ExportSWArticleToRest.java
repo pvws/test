@@ -141,6 +141,7 @@ public class ExportSWArticleToRest {
 			strJsonReturn = PushArticleToSW.doPush(strJsonPush);
 			
 			// TODO: Response auswerten
+			System.out.println(strJsonReturn);
 			js = Json.createReader(new StringReader(strJsonReturn)).read();
 			
 			

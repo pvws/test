@@ -44,56 +44,56 @@ public class SWConfiguratorGroup {
 	/**
 	 * @return iSwId
 	 */
-	public int getiSwId() {
+	public int getSwId() {
 		return iSwId;
 	}
 
 	/**
 	 * @param iSwId das zu setzende Objekt iSwId
 	 */
-	public void setiSwId(int iSwId) {
+	public void setSwId(int iSwId) {
 		this.iSwId = iSwId;
 	}
 
 	/**
 	 * @return strDescription
 	 */
-	public String getStrDescription() {
+	public String getDescription() {
 		return strDescription;
 	}
 
 	/**
 	 * @param strDescription das zu setzende Objekt strDescription
 	 */
-	public void setStrDescription(String strDescription) {
+	public void setDescription(String strDescription) {
 		this.strDescription = strDescription;
 	}
 
 	/**
 	 * @return strName
 	 */
-	public String getStrName() {
+	public String getName() {
 		return strName;
 	}
 
 	/**
 	 * @param strName das zu setzende Objekt strName
 	 */
-	public void setStrName(String strName) {
+	public void setName(String strName) {
 		this.strName = strName;
 	}
 
 	/**
 	 * @return iPosition
 	 */
-	public int getiPosition() {
+	public int getPosition() {
 		return iPosition;
 	}
 
 	/**
 	 * @param iPosition das zu setzende Objekt iPosition
 	 */
-	public void setiPosition(int iPosition) {
+	public void setPosition(int iPosition) {
 		this.iPosition = iPosition;
 	}
 

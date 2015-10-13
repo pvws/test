@@ -24,6 +24,11 @@ public class ExportSWArticleToCsv {
 	private Boolean bSupplier;
 	private Boolean bTax;
 	private Boolean bPrice;
+	private Boolean bCategories;
+	
+	private Boolean bConfigOption;
+	
+	private Boolean bAttributes;
 	
 	/**
 	 * 
@@ -68,6 +73,11 @@ public class ExportSWArticleToCsv {
 		this.bSupplier = true;
 		this.bTax = true;
 		this.bPrice = true;
+		this.bCategories = true;
+		
+		this.bConfigOption = true;
+		
+		this.bAttributes = true;
 	}
 	
 	/**
@@ -264,7 +274,85 @@ public class ExportSWArticleToCsv {
 			strLine += ";" + swa.getSwTax().getSwTax();
 		if (this.bPrice)
 			strLine += ";" + String.valueOf(swad.getPrice(1).getPrice());
+		if (this.bCategories) {
+			SWCategory swcCat;
+			Iterator<SWCategory> iSwcCat;
+			String str = ";";
+			
+			iSwcCat = swa.getCategories().iterator();
+			while (iSwcCat.hasNext()) {
+				swcCat = iSwcCat.next();
+				str += swcCat.getId();
+				str += "|";
+			}
+			if (str.length() > 2)
+				strLine += str.substring(0, str.length()-1);
+			else
+				strLine += str;
+		} // if categories
 
+		if (this.bConfigOption) {
+			strLine += ";" + "1"; // configuratorsetID, must be set, but without function
+			strLine += ";" + ""; // configuratortype, not used yet
+			// strLine += ";" + "configuratorOption"; // configuratorOption, separated by pipe
+			Iterator<SWConfiguratorOption> i;
+			SWConfiguratorOption swco;
+			String str = ";";
+			i = swad.getConfiguratorOptions().iterator();
+			while (i.hasNext()) {
+				swco = i.next();
+				str += swco.getSwGroupId();
+				str += ":";
+				str += swco.getName();
+				str += "|";
+			}
+			if (str.length() > 3)
+				strLine += str.substring(0, str.length()-2);
+			else
+				strLine += str;
+		} // if configOptions
+		
+		if (this.bAttributes) {
+			strLine += ";" + swad.getAttribute().getAttr1();
+			strLine += ";" + swad.getAttribute().getAttr2();
+			strLine += ";" + swad.getAttribute().getAttr3();
+			strLine += ";" + swad.getAttribute().getAttr4();
+			strLine += ";" + swad.getAttribute().getAttr5();
+			strLine += ";" + swad.getAttribute().getAttr6();
+			strLine += ";" + swad.getAttribute().getAttr7();
+			strLine += ";" + swad.getAttribute().getAttr8();
+			strLine += ";" + swad.getAttribute().getAttr9();
+			strLine += ";" + swad.getAttribute().getAttr10();
+			strLine += ";" + swad.getAttribute().getAttr11();
+			strLine += ";" + swad.getAttribute().getAttr12();
+			strLine += ";" + swad.getAttribute().getAttr13();
+			strLine += ";" + swad.getAttribute().getAttr14();
+			strLine += ";" + swad.getAttribute().getAttr15();
+			strLine += ";" + swad.getAttribute().getAttr16();
+			strLine += ";" + swad.getAttribute().getAttr17();
+			strLine += ";" + swad.getAttribute().getAttr18();
+			strLine += ";" + swad.getAttribute().getAttr19();
+			strLine += ";" + swad.getAttribute().getAttr20();
+		}
+		
+		
+		// for testing
+		LinkedList<String> ll;
+		Iterator<String> i;
+		if (swa.isDwImagesSet()) {
+			ll = swa.getDwImageList();
+			i = ll.iterator();
+			strLine += ";";
+			while (i.hasNext()) {
+				strLine += i.next();
+				strLine += "|";
+			}
+			strLine = strLine.substring(0, strLine.length()-2);
+		}
+		else {
+			strLine += ";";
+		}
+		
 		return strLine;
 	}
 
@@ -289,6 +377,40 @@ public class ExportSWArticleToCsv {
 			strHL += ";" + "tax";
 		if (this.bPrice)
 			strHL += ";" + "price";
+		if (this.bCategories)
+			strHL += ";" + "categories";
+		
+		if (this.bConfigOption) {
+			strHL += ";" + "configuratorsetID";
+			strHL += ";" + "configuratortype";
+			strHL += ";" + "configuratorOption";
+		}
+		
+		if (this.bAttributes) {
+			strHL += ";" + "attr_attr1";
+			strHL += ";" + "attr_attr2";
+			strHL += ";" + "attr_attr3";
+			strHL += ";" + "attr_attr4";
+			strHL += ";" + "attr_attr5";
+			strHL += ";" + "attr_attr6";
+			strHL += ";" + "attr_attr7";
+			strHL += ";" + "attr_attr8";
+			strHL += ";" + "attr_attr9";
+			strHL += ";" + "attr_attr10";
+			strHL += ";" + "attr_attr11";
+			strHL += ";" + "attr_attr12";
+			strHL += ";" + "attr_attr13";
+			strHL += ";" + "attr_attr14";
+			strHL += ";" + "attr_attr15";
+			strHL += ";" + "attr_attr16";
+			strHL += ";" + "attr_attr17";
+			strHL += ";" + "attr_attr18";
+			strHL += ";" + "attr_attr19";
+			strHL += ";" + "attr_attr20";
+		}
+		
+		// for testing
+		strHL += ";imageList";
 		
 		strHL += "\r\n";
 		return strHL;

@@ -26,12 +26,15 @@ public class ImportDWArticleCat extends DefaultHandler {
 	private LinkedList<SWArticleDetail> llSWArticleDetail;
 	private SWArticle swa;
 	private SWArticleDetail swad;
+	private SWCategory swcCat;
+	private SWConfiguratorGroup swcgConficGroup;
+	private SWConfiguratorOption swcoConfigOption;
 	private String strEValue;
 	private Attributes aAttribute;
 	private Boolean bIsMaster;
 	private Boolean bIsDESet;
-	private SWConfiguratorGroup swcgConficGroup;
-	private SWConfiguratorOption swcoConfigOption;
+	private Boolean bIsZoomLarge;
+	private String strDwImagePath;
 
 	
 	/**
@@ -40,6 +43,7 @@ public class ImportDWArticleCat extends DefaultHandler {
 	public ImportDWArticleCat () {
 		this.llSWArticle = new LinkedList<SWArticle>();
 		this.llSWArticleDetail = new LinkedList<SWArticleDetail>();
+		this.strDwImagePath = "";
 	}
 
 	/**
@@ -51,6 +55,7 @@ public class ImportDWArticleCat extends DefaultHandler {
 		this.llSWArticle = llSWArticle;
 		this.llSWArticle.clear();
 		this.llSWArticleDetail = new LinkedList<SWArticleDetail>();
+		this.strDwImagePath = "";
 	}
 
 	/**
@@ -129,7 +134,9 @@ public class ImportDWArticleCat extends DefaultHandler {
 		case "product":
 			swa = new SWArticle();
 			swad = new SWArticleDetail();
+			swa.setDwImagePath(this.strDwImagePath);
 			this.bIsMaster = true;
+			this.bIsZoomLarge = false;
 			for (int i = 0; i < atts.getLength(); i++) {
 				switch (atts.getQName(i)) {
 				case "product-id":
@@ -172,13 +179,36 @@ public class ImportDWArticleCat extends DefaultHandler {
 			for (int i = 0; i < atts.getLength(); i++) {
 				switch (atts.getQName(i)) {
 				case "value":
-					this.swcoConfigOption = new SWConfiguratorOption(this.swcgConficGroup.getiSwId());
+					this.swcoConfigOption = new SWConfiguratorOption(this.swcgConficGroup);
 					this.bIsDESet = false;
 					break;
 				} // switch (attribute)
 			} // for all attributes
 			break;
 		case "display-value":
+			break;
+		case "classification-category":
+			for (int i = 0; i < atts.getLength(); i++) {
+				switch (atts.getQName(i)) {
+				case "catalog-id":
+					this.swcCat = new SWCategory();
+					break;
+				} // switch (attribute)
+			} // for all attributes
+			break;
+		case "http-url":
+			break;
+		case "image-group":
+			for (int i = 0; i < atts.getLength(); i++) {
+				switch (atts.getQName(i)) {
+				case "view-type":
+					if (atts.getValue(i).equals("zoomLarge"))
+						this.bIsZoomLarge = true;
+					break;
+				} // switch (attribute)
+			} // for all attributes
+			break;
+		case "image":
 			break;
 		} // switch (localeName)
 		
@@ -330,6 +360,28 @@ public class ImportDWArticleCat extends DefaultHandler {
 						break;
 					} // switch (attribute)
 				} // for all attributes
+				break;
+			case "classification-category":
+				this.swcCat.setId(this.strEValue);
+				this.swa.addCategories(this.swcCat);
+				break;
+			case "http-url":
+				this.strDwImagePath = this.strEValue;
+				break;
+			case "image-group":
+				this.bIsZoomLarge = false;
+				break;
+			case "image":
+				if (this.bIsZoomLarge) {
+					for (int i = 0; i < this.aAttribute.getLength(); i++) {
+						strAName = this.aAttribute.getQName(i);
+						switch (strAName) {
+						case "path":
+							this.swa.addDwImage(this.aAttribute.getValue(i));
+							break;
+						} // switch (attribute)
+					} // for all attributes
+				}
 				break;
 
 		} // switch (localeName)

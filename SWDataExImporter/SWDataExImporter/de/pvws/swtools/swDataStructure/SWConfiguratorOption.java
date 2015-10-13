@@ -12,6 +12,7 @@ public class SWConfiguratorOption {
 	private int swGroupId;	// PK / Configurator Group
 	private String name;
 	private int position;
+	private SWConfiguratorGroup swcgConfigGroup;
 
 	/**
 	 * 
@@ -19,6 +20,14 @@ public class SWConfiguratorOption {
 	 */
 	public SWConfiguratorOption (int ConfigGroupId) {
 		this.swGroupId = ConfigGroupId;
+	}
+
+	/**
+	 * 
+	 * @param swcg
+	 */
+	public SWConfiguratorOption (SWConfiguratorGroup swcg) {
+		this.swcgConfigGroup = swcg;
 	}
 
 	/**
@@ -62,7 +71,15 @@ public class SWConfiguratorOption {
 	 * @return swGroupId
 	 */
 	public int getSwGroupId() {
-		return swGroupId;
+		return this.swcgConfigGroup.getSwId();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public SWConfiguratorGroup getSWConfiguratorGroup () {
+		return this.swcgConfigGroup;
 	}
 
 	/**

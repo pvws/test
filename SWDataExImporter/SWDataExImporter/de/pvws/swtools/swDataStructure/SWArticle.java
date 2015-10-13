@@ -48,10 +48,14 @@ public class SWArticle {
 	private String strAvailableTo;						// date/time
 	private SWPropertyValue swpvPropertyValue;			// array
 	private SWCustomerGroup swcgCustomerGroups;			// array
+	private String strDwImagePath;
+	private LinkedList<String> llDwImages;
+	private LinkedList<String> llDwImagePaths;
+	private Boolean bDwImagesSet;
 	private SWImage swiImages;							// array
 	private SWConfiguratorSet swcsConfiguratorSet;
 	private SWDownload swdDownlowds;					// array
-	private SWCategory swcCategories;					// array
+	private LinkedList<SWCategory> llSwcCategories;		// array
 	private SWSimilar swsSimilar;						// array
 	private SWRelated swrRelated;						// array
 	private LinkedList<SWArticleDetail> llSwadVariants;	// array -> LinkedList
@@ -79,6 +83,13 @@ public class SWArticle {
 		// TODO Array init
 		this.llSwadVariants = new LinkedList<SWArticleDetail>();
 		this.bHasVariants = false;
+		
+		this.llSwcCategories = new LinkedList<SWCategory>();
+		
+		this.llDwImages = new LinkedList<String>();
+		this.llDwImagePaths = new LinkedList<String>();
+		this.strDwImagePath = ""; // "http://netrada2.scene7.com/is/image/netrada2/";
+		this.bDwImagesSet = false;
 	}
 
 
@@ -624,16 +635,16 @@ public class SWArticle {
 	/**
 	 * @return swcCategories
 	 */
-	public SWCategory getCategories() {
-		return swcCategories;
+	public LinkedList<SWCategory> getCategories() {
+		return this.llSwcCategories;
 	}
 
 
 	/**
 	 * @param swcCategories das zu setzende Objekt swcCategories
 	 */
-	public void setCategories(SWCategory swcCategories) {
-		this.swcCategories = swcCategories;
+	public void addCategories(SWCategory swcCategories) {
+		this.llSwcCategories.add(swcCategories);
 	}
 
 
@@ -683,6 +694,7 @@ public class SWArticle {
 		// set Supplier if needed
 		if (swadVariant.getSupplierNumber() == null || swadVariant.getSupplierNumber().equals(""))
 			swadVariant.setSupplierNumber(String.valueOf(this.iSwSupplierId));
+		// TODO: ConfigOptions !?
 		// if there is no MainDetail yet, set it
 		if (!this.isMainDetailSet()) {
 			this.setMainDetail(swadVariant);
@@ -702,16 +714,107 @@ public class SWArticle {
 		return this.bHasVariants;
 	} // hasVariants
 	
+	/**
+	 * Set the indicator if the article has Variants
+	 * 
+	 * @param b
+	 */
 	private void setHasVariants (Boolean b) {
 		this.bHasVariants = b;
 	} // setHasVariants
 	
+	/**
+	 * Returns true, if the MainDetail is already set
+	 * 
+	 * @return
+	 */
 	private Boolean isMainDetailSet () {
 		return this.bIsMainDetailSet;
 	}
 	
+	/**
+	 * Sets the Indicator if the MainDetail already set.
+	 * 
+	 * @param b
+	 */
 	private void setIsMainDetailSet(Boolean b) {
 		this.bIsMainDetailSet = b;
 	} // steIsMainDetailSet
 	
+	/**
+	 * Sets the path to the images.
+	 * 
+	 * @param path
+	 */
+	public void setDwImagePath(String path) {
+		this.strDwImagePath = path;
+	}
+	
+	/**
+	 * Returns the PATH where the Images are.
+	 * 
+	 * @return
+	 */
+	public String getDwImagePath () {
+		return this.strDwImagePath;
+	}
+	
+	/**
+	 * Sets the Image is Set Indicator.
+	 * 
+	 * @param b
+	 */
+	private void setDwImagesSet (Boolean b) {
+		this.bDwImagesSet = b;
+	}
+	
+	/**
+	 * Returns true, if at least one Image was added.
+	 * 
+	 * @return
+	 */
+	public Boolean isDwImagesSet () {
+		return this.bDwImagesSet;
+	}
+	
+	/**
+	 * Adds a Image-Name to the Image-List.
+	 * 
+	 * @param image
+	 */
+	public void addDwImage (String image) {
+		String path;
+		
+		if (this.llDwImages == null)
+			this.llDwImages = new LinkedList<String>();
+		
+		// add just Image
+		this.llDwImages.add(image);
+		this.bDwImagesSet = true;
+
+		// add full URI
+		path = this.getDwImagePath();
+		if (path.length() > 2)
+			if (path.charAt(path.length()-1) == '/')
+				path = path.substring(0, path.length()-2);
+		this.llDwImagePaths.add(path + image);
+	}
+	
+	/**
+	 * Returns a LinkedList with the Image-Names and eventually the scene7 postfixes.
+	 * 
+	 * @return
+	 */
+	public LinkedList<String> getDwImageList () {
+		return this.llDwImages;
+	}
+	
+	/**
+	 * Returns a LinkedList with DW-Image-Paths where the Images can be downloaded
+	 * 
+	 * @return ImagePath - List as Strings
+	 */
+	public LinkedList<String> geDwImagePathList() {
+		return this.llDwImagePaths;
+	}
 }

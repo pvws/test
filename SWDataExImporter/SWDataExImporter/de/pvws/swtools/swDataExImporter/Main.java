@@ -58,11 +58,11 @@ public class Main {
 			System.out.println();
 			
 			System.out.println("Beginn Artikel-CSV schreiben : " + PvwsCalendar.getDateTime());
-//			exCsv.doExport(llSWArticle);
+			exCsv.doExport(llSWArticle);
 			System.out.println("Ende Artikel-CSV schreiben : " + PvwsCalendar.getDateTime());
 
 			System.out.println("Beginn Artikel-JSON schreiben : " + PvwsCalendar.getDateTime());
-			ExportSWArticleToRest.doExport(llSWArticle, ExportSWArticleToRest.MODE_MERGE);
+			//ExportSWArticleToRest.doExport(llSWArticle, ExportSWArticleToRest.MODE_MERGE);
 			System.out.println("Ende Artikel-JSON schreiben : " + PvwsCalendar.getDateTime());
 			
 		} 
