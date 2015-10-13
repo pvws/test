@@ -3,10 +3,6 @@
  */
 package de.pvws.swtools.util.REST;
 
-import de.pvws.swtools.swDataStructure.*;
-
-import java.util.*;
-
 import javax.ws.rs.core.*;
 import javax.ws.rs.client.*;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -24,7 +20,17 @@ public class PushArticleToSW {
 		
 	}
 	
-	public static void doPush (String strJson) {
+	/**
+	 * Pushes the JSON String 'as POST' to 'the articles' and returns the Response as JSON String.
+	 * Return contains:
+	 * - "status":int, 
+	 * - "statusInfo":string and 
+	 * - "entity":string
+	 *  
+	 * @param strJson
+	 * @return
+	 */
+	public static String doPush (String strJson) {
 		Client client;
 		HttpAuthenticationFeature httpAuthFeat;
 		WebTarget wtHost;
@@ -43,9 +49,33 @@ public class PushArticleToSW {
 
 		resp = wtHost.request().post(Entity.entity(strJson, MediaType.APPLICATION_JSON_TYPE));
 		
-		System.out.println("POST-Status:     " + resp.getStatus());
-		System.out.println("POST-StatusInfo: " + resp.getStatusInfo());
-		System.out.println("POST-Response:   " + resp.readEntity(String.class));
-	}
+		return PushArticleToSW.createResponseString(resp);
+	} // doPush()
 
+	/**
+	 * Creates an JSON String from the Response, containing 
+	 * - "status":int, 
+	 * - "statusInfo":string and 
+	 * - "entity":string
+	 * 
+	 * @param resp
+	 * @return A JSON String
+	 */
+	private static String createResponseString (Response resp) {
+		JsonObjectBuilder job;
+		JsonObject jb;
+		
+		String strJson = "";
+		
+		if (resp != null) {
+			job = Json.createObjectBuilder();
+			job.add("status", resp.getStatusInfo().getStatusCode());
+			job.add("statusInfo", resp.getStatusInfo().getReasonPhrase());
+			job.add("entity", resp.readEntity(String.class));
+			jb = job.build();
+			strJson = jb.toString();
+		}
+		
+		return strJson;
+	} // createResponseString
 }

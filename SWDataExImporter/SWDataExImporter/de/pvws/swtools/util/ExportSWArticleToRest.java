@@ -7,7 +7,10 @@ import de.pvws.swtools.swDataStructure.*;
 import de.pvws.swtools.swRestDataStructure.SwArticleToJson;
 import de.pvws.swtools.util.REST.*;
 
+import java.io.StringReader;
 import java.util.*;
+
+import javax.json.*;
 
 /**
  * 
@@ -117,8 +120,10 @@ public class ExportSWArticleToRest {
 		Iterator<SWArticle> itSwa;
 		SWArticle swa;
 		
-		String strJson;
+		String strJsonPush;
+		String strJsonReturn;
 
+		JsonStructure js;
 		// Exit if something is wrong
 		if (this.llSwaNew == null || this.llSwaExec == null) {
 			this.bSuccess = false;
@@ -129,9 +134,16 @@ public class ExportSWArticleToRest {
 		itSwa = this.llSwaExec.iterator();
 		while (itSwa.hasNext()) {
 			swa = itSwa.next();
-			strJson = SwArticleToJson.buildJsonArticle(swa);
+			if (swa.getName() == null || swa.getName().equals("") || swa.getMainDetail().getPrice(1).getPrice() >= 99999.00)
+				continue;
+			strJsonPush = SwArticleToJson.buildJsonArticle(swa);
 
-			PushArticleToSW.doPush(strJson);
+			strJsonReturn = PushArticleToSW.doPush(strJsonPush);
+			
+			// TODO: Response auswerten
+			js = Json.createReader(new StringReader(strJsonReturn)).read();
+			
+			
 		} // while itSwa.hasNext()
 		
 		
