@@ -13,7 +13,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonWriter;
+//import javax.json.JsonWriter;
 
 /**
  * 
@@ -96,6 +96,7 @@ public class SwArticleToJson {
 		
 		// create ArticleDetail Object
 		if (swad == null) {
+			// TODO: if no Object then no JSON Content
 			job.add("number", 1);
 			job.add("supplierNumber", "1");
 			job.add("additionalText", "");

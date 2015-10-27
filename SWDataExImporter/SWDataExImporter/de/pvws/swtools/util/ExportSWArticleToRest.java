@@ -5,12 +5,14 @@ package de.pvws.swtools.util;
 
 import de.pvws.swtools.swDataStructure.*;
 import de.pvws.swtools.swRestDataStructure.SwArticleToJson;
+import de.pvws.swtools.swRestDataStructure.SwMediaToJson;
 import de.pvws.swtools.util.REST.*;
 
 import java.io.StringReader;
 import java.util.*;
 
 import javax.json.*;
+import javax.json.stream.JsonParser;
 
 /**
  * 
@@ -107,7 +109,7 @@ public class ExportSWArticleToRest {
 		
 		this.llSwaOld = new LinkedList<SWArticle>();
 		
-		this.strSWDataJsonOld = PullArticleFromSW.doPull();
+		this.strSWDataJsonOld = PullDataFromSW.doPull();
 	} // doPull()
 	
 	/**
@@ -136,13 +138,17 @@ public class ExportSWArticleToRest {
 			swa = itSwa.next();
 			if (swa.getName() == null || swa.getName().equals("") || swa.getMainDetail().getPrice(1).getPrice() >= 99999.00)
 				continue;
-			strJsonPush = SwArticleToJson.buildJsonArticle(swa);
+			strJsonPush = SwMediaToJson.buildJsonMediaImport(swa);
+			//strJsonPush = SwArticleToJson.buildJsonArticle(swa);
 
-			strJsonReturn = PushArticleToSW.doPush(strJsonPush);
+			strJsonReturn = PushDataToSW.doPush(strJsonPush, PushDataToSW.ARTICLES);
+			strJsonReturn = PushDataToSW.doPush(strJsonPush, PushDataToSW.MEDIA);
 			
 			// TODO: Response auswerten
 			System.out.println(strJsonReturn);
+			String s = "{\"status\":201,\"statusInfo\":\"Created\",\"entity\":\"{\"success\":true,\"data\":{\"id\":1603,\"location\":\"http:\\/\\/shopware-dev\\/api\\/articles\\/1603\"}}\"}";
 			js = Json.createReader(new StringReader(strJsonReturn)).read();
+			JsonParser jp = Json.createParser(new StringReader(s));
 			
 			
 		} // while itSwa.hasNext()

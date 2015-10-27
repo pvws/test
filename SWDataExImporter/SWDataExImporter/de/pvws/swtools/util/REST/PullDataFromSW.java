@@ -19,7 +19,7 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
  * @author PV KT
  *
  */
-public class PullArticleFromSW {
+public class PullDataFromSW {
 	private Client client;
 	private HttpAuthenticationFeature httpAuthFeat;
 	private WebTarget wtHost;
@@ -30,11 +30,11 @@ public class PullArticleFromSW {
 	private String strRespStatusInfo;
 	private String strRespEntity;
 
-	public PullArticleFromSW () {
+	public PullDataFromSW () {
 		
 	}
 
-	public PullArticleFromSW (LinkedList<SWArticle> llSwa) {
+	public PullDataFromSW (LinkedList<SWArticle> llSwa) {
 		
 	}
 	
@@ -49,7 +49,7 @@ public class PullArticleFromSW {
 //		String strRespStatusInfo;
 //		String strRespEntity;
 		
-		PullArticleFromSW pull = new PullArticleFromSW();
+		PullDataFromSW pull = new PullDataFromSW();
 		
 		return pull.doExec();
 		
