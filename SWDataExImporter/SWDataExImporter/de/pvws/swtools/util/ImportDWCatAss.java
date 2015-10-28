@@ -24,7 +24,7 @@ import de.pvws.swtools.swDataStructure.SWPrice;
  * @author pvws
  *
  */
-public class ImportDWPriceCat extends DefaultHandler {
+public class ImportDWCatAss extends DefaultHandler {
 	private LinkedList<SWPrice> llSWPrice;
 	private LinkedList<SWArticle> llSWArticle;
 	private String strEValue;
@@ -36,7 +36,7 @@ public class ImportDWPriceCat extends DefaultHandler {
 	/**
 	 * 
 	 */
-	public ImportDWPriceCat () {
+	public ImportDWCatAss () {
 		this.llSWPrice = new LinkedList<SWPrice>();
 		this.bIsSale = false;
 	}
@@ -44,7 +44,7 @@ public class ImportDWPriceCat extends DefaultHandler {
 	/**
 	 * 
 	 */
-	public ImportDWPriceCat (LinkedList<SWArticle> llSWArticle) {
+	public ImportDWCatAss (LinkedList<SWArticle> llSWArticle) {
 		this.llSWPrice = new LinkedList<SWPrice>();
 		this.llSWArticle = llSWArticle;
 		this.bIsSale = false;
@@ -80,9 +80,6 @@ public class ImportDWPriceCat extends DefaultHandler {
 	@Override
 	public void endDocument () throws SAXException {
 		System.out.println("Ende des XML-Dokumentes");
-		System.out.println("Beginn Zuweisung Preise zu Artikel");
-		this.sortPriceData();
-		System.out.println("Ende Zuweisung Preise zu Artikel");
 	}
 	
 	@Override
@@ -93,6 +90,14 @@ public class ImportDWPriceCat extends DefaultHandler {
 		String strAValue;
 		this.aAttribute = atts;
 		
+		// Logging
+/*		System.out.println("Beginn des Elementes " + localeName);
+		if (localeName == "pricebooks")
+			System.out.println("\tNamespace : " + namespaceURI);
+		for (int i = 0; i < atts.getLength(); i++) {
+			System.out.println ("\tAttribute " + atts.getQName(i) + " : " + atts.getValue(i));
+		}
+*/		
 		// Element-Attribute übernehmen
 		switch (localeName) {
 		case "header":
@@ -162,11 +167,12 @@ public class ImportDWPriceCat extends DefaultHandler {
 							int l) throws SAXException {
 		String v = String.valueOf(ch).substring(s, s+l).trim();
 		this.strEValue = v;
-//		if (v.length() > 0) {
+		if (v.length() > 0) {
 //			System.out.println ("	Wert :" + v);
-//		}
+		}
 	} // characters
 	
+/*	
 	private void sortPriceData () {
 		Hashtable<String, SWPrice> htPrice;
 		Iterator<SWPrice> iPrice;
@@ -178,6 +184,7 @@ public class ImportDWPriceCat extends DefaultHandler {
 		String ean;
 		
 		System.out.println("Anzahl PriceData : " + this.llSWPrice.size());
+		// Hashtable Price <ArticleId, swPrice>
 		htPrice = new Hashtable<String, SWPrice>();
 		iPrice = this.llSWPrice.iterator();
 		while (iPrice.hasNext()) {
@@ -208,4 +215,5 @@ public class ImportDWPriceCat extends DefaultHandler {
 			} // while iSwad.hasNext()
 		} // while iSwa.hasNext()
 	} // sortPriceData
+*/
 }

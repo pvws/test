@@ -12,31 +12,28 @@ import java.io.*;
  * @author PV KT
  *
  */
-public class ExportSWArticleToCsv {
+public class ExportSWMediaToCsv {
 	private String strPath;
 	private String strFilename;
 	private LinkedList<SWArticle> llSwa;
 	private String strDate;
 	
 	private Boolean bOrderNumber;
-	private Boolean bMainNumber;
-	private Boolean bName;
-	private Boolean bSupplier;
-	private Boolean bTax;
-	private Boolean bPrice;
-	private Boolean bCategories;
-	
-	private Boolean bConfigOption;
-	
-	private Boolean bAttributes;
+	private Boolean bImage;
+	private Boolean bMain;
+	private Boolean bDescription;
+	private Boolean bPosition;
+	private Boolean bWidth;
+	private Boolean bHeight;
+	private Boolean bRelations;
 	
 	/**
 	 * 
 	 */
-	public ExportSWArticleToCsv () {
+	public ExportSWMediaToCsv () {
 		this.setDateTime();
 		this.setDataRange();
-		this.strFilename = "swArticle_" + strDate + ".csv";
+		this.strFilename = "swMedia_" + strDate + ".csv";
 		this.strPath = "D:/";
 	}
 	
@@ -46,7 +43,7 @@ public class ExportSWArticleToCsv {
 	 * @param path
 	 * @param filename
 	 */
-	public ExportSWArticleToCsv (LinkedList<SWArticle> swa, String path, String filename) {
+	public ExportSWMediaToCsv (LinkedList<SWArticle> swa, String path, String filename) {
 		this.setDataRange();
 		this.llSwa = swa;
 		this.strPath = path;
@@ -58,26 +55,23 @@ public class ExportSWArticleToCsv {
 	 * @param swad LinkedList of ArticleData
 	 * @param path Path without Filename
 	 */
-	public ExportSWArticleToCsv (LinkedList<SWArticle> swa, String path) {
+	public ExportSWMediaToCsv (LinkedList<SWArticle> swa, String path) {
 		this.setDateTime();
 		this.setDataRange();
 		this.llSwa = swa;
 		this.strPath = path;
-		this.strFilename = "swArticle_" + strDate + ".csv";
+		this.strFilename = "swMedia_" + strDate + ".csv";
 	}
 	
 	private void setDataRange () {
 		this.bOrderNumber = true;
-		this.bMainNumber = true;
-		this.bName = true;
-		this.bSupplier = true;
-		this.bTax = true;
-		this.bPrice = true;
-		this.bCategories = true;
-		
-		this.bConfigOption = true;
-		
-		this.bAttributes = true;
+		this.bImage = true;
+		this.bMain = true;
+		this.bDescription = true;
+		this.bPosition = true;
+		this.bWidth = true;
+		this.bHeight = true;
+		this.bRelations = true;
 	}
 	
 	/**
@@ -259,50 +253,31 @@ public class ExportSWArticleToCsv {
 		String strLine = "";
 		
 		if (this.bOrderNumber)
+			//strLine += "001_Bao";
 			strLine += swad.getSWNumber();
 		// Main Detail gets no main number but empty field
-		if (this.bMainNumber && isMainDetail)
-			strLine += ";";
+		if (this.bImage)
+			strLine += "http://shopware-dev/test/ntw_sp68100_01_1.jpg";
+			//strLine += ";";
 		// Variant gets main number => SW Article Number of Main Detail
-		if (this.bMainNumber && !isMainDetail)
-			strLine += ";" + swa.getMainDetail().getSWNumber();
-		if (this.bName)
-			strLine += ";" + swa.getName();
-		if (this.bSupplier)
-			strLine += ";" + swa.getSupplier().getName();
-		if (this.bTax)
-			strLine += ";" + swa.getSwTax().getSwTax();
-		if (this.bPrice)
-			strLine += ";" + String.valueOf(swad.getPrice(1).getPrice());
-		if (this.bCategories) {
-			strLine += this.createCategoryString(swa, swad);
-		}
-
-		if (this.bConfigOption) {
-			strLine += this.createConfigFields(swad);
-		} // if configOptions
-		
-		if (this.bAttributes) {
-			strLine += this.createArticleAttributesString(swad);
-		}
-		
-		
-		// for testing
-		strLine += ";" + swa.getDwImagePath();
-		LinkedList<String> ll;
-		Iterator<String> i;
-		if (swa.isDwImagesSet()) {
-			ll = swa.getDwImageList();
-			i = ll.iterator();
-			strLine += ";";
-			while (i.hasNext()) {
-				strLine += i.next();
-				strLine += "|";
-			}
-			strLine = strLine.substring(0, strLine.length()-2);
-		}
-		else {
-			strLine += ";";
+		if (this.bMain)
+			strLine += "1";
+			//strLine += ";" + swa.getMainDetail().getSWNumber();
+		if (this.bDescription)
+			strLine += "Test-Upload";
+			//strLine += ";" + swa.getName();
+		if (this.bPosition)
+			strLine += "1";
+			//strLine += ";" + swa.getSupplier().getName();
+		if (this.bWidth)
+			strLine += "";
+			//strLine += ";" + swa.getSwTax().getSwTax();
+		if (this.bHeight)
+			strLine += "";
+			//strLine += ";" + String.valueOf(swad.getPrice(1).getPrice());
+		if (this.bRelations) {
+			strLine += "";
+			//strLine += this.createCategoryString(swa, swad);
 		}
 		
 		return strLine;
@@ -319,51 +294,22 @@ public class ExportSWArticleToCsv {
 		strHL = "";
 		if (this.bOrderNumber)
 			strHL = "ordernumber";
-		if (this.bMainNumber)
-			strHL += ";" + "mainnumber";
-		if (this.bName)
-			strHL += ";" + "name";
-		if (this.bSupplier)
-			strHL += ";" + "supplier";
-		if (this.bTax)
-			strHL += ";" + "tax";
-		if (this.bPrice)
-			strHL += ";" + "price";
-		if (this.bCategories)
-			strHL += ";" + "categories";
+		if (this.bImage)
+			strHL += ";" + "image";
+		if (this.bMain)
+			strHL += ";" + "main";
+		if (this.bDescription)
+			strHL += ";" + "description";
+		if (this.bPosition)
+			strHL += ";" + "position";
+		if (this.bWidth)
+			strHL += ";" + "width";
+		if (this.bHeight)
+			strHL += ";" + "height";
 		
-		if (this.bConfigOption) {
-			strHL += ";" + "configuratorsetID";
-			strHL += ";" + "configuratortype";
-			strHL += ";" + "configuratorOption";
+		if (this.bRelations) {
+			strHL += ";" + "relations";
 		}
-		
-		if (this.bAttributes) {
-			strHL += ";" + "attr_attr1";
-			strHL += ";" + "attr_attr2";
-			strHL += ";" + "attr_attr3";
-			strHL += ";" + "attr_attr4";
-			strHL += ";" + "attr_attr5";
-			strHL += ";" + "attr_attr6";
-			strHL += ";" + "attr_attr7";
-			strHL += ";" + "attr_attr8";
-			strHL += ";" + "attr_attr9";
-			strHL += ";" + "attr_attr10";
-			strHL += ";" + "attr_attr11";
-			strHL += ";" + "attr_attr12";
-			strHL += ";" + "attr_attr13";
-			strHL += ";" + "attr_attr14";
-			strHL += ";" + "attr_attr15";
-			strHL += ";" + "attr_attr16";
-			strHL += ";" + "attr_attr17";
-			strHL += ";" + "attr_attr18";
-			strHL += ";" + "attr_attr19";
-			strHL += ";" + "attr_attr20";
-		}
-		
-		// for testing
-		strHL += ";imagePath";
-		strHL += ";imageList";
 		
 		strHL += "\r\n";
 		return strHL;

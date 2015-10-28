@@ -444,5 +444,11 @@ public class ImportDWArticleCat extends DefaultHandler {
 				if (htSWA.get(parent) != null)
 					(htSWA.get(parent)).addVariant(swad);
 		} // while i.hasNext()
+		
+		// compute Image-Paths DW to SW
+		iSwa = this.llSWArticle.iterator();
+		while (iSwa.hasNext()) {
+			iSwa.next().computeDWImageToSw();
+		} // while ii.hasNext()
 	}
 }

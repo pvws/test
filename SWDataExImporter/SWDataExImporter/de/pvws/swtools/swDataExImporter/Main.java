@@ -34,7 +34,7 @@ public class Main {
 		
 		llSWArticle = new LinkedList<SWArticle>();
 		try {
-			// import Article MasterData
+		// import Article MasterData
 			// Daten-Quellen
 			System.out.println ("Beginn MasterCat einlesen : " + PvwsCalendar.getDateTime());
 			dwACat = new ImportDWArticleCat (llSWArticle);
@@ -46,7 +46,7 @@ public class Main {
 			System.out.println ("Ende MasterCat einlesen : " + PvwsCalendar.getDateTime());
 			System.out.println();
 			
-			// import Price Data
+		// import Price Data
 			// Daten-Quellen
 			System.out.println ("Beginn PriceCat List einlesen : " + PvwsCalendar.getDateTime());
 			dwPCat = new ImportDWPriceCat (llSWArticle);
@@ -62,26 +62,39 @@ public class Main {
 			//dwPCat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/demoshop-de-saleprice-test.xml");
 			System.out.println ("Ende PriceCat Sale einlesen : " + PvwsCalendar.getDateTime());
 			System.out.println();
+
+		// import Category Assignments
+			// Daten-Quellen
+			System.out.println ("Beginn Category Assignments einlesen : " + PvwsCalendar.getDateTime());
+			dwPCat = new ImportDWPriceCat (llSWArticle);
+			//dwPCat.doImport("C:/Users/mfehr/Documents/Projekte/Shopware/POC Shop/DEV/DW Daten/demo_navcat_150527.xml");
+			//dwPCat.doImport("V:/Entwicklung/Eclipse/SWTools/DW_Daten/demo_navcat_150527.xml");
+			System.out.println ("Ende Category Assignments einlesen : " + PvwsCalendar.getDateTime());
+			System.out.println();
 			
-			// Media-Daten in CSV schreiben
-//			System.out.println("Beginn Artikel-CSV schreiben : " + PvwsCalendar.getDateTime());
+		// Media-Daten in CSV schreiben
+//			System.out.println("Beginn Media-CSV schreiben : " + PvwsCalendar.getDateTime());
 //			exMediaCsv.doExport(llSWArticle);
-//			System.out.println("Ende Artikel-CSV schreiben : " + PvwsCalendar.getDateTime());
+//			System.out.println("Ende Media-CSV schreiben : " + PvwsCalendar.getDateTime());
+//			System.out.println();
 
-			// Artikel-Daten in CSV schreiben
-//			System.out.println("Beginn Artikel-CSV schreiben : " + PvwsCalendar.getDateTime());
-//			exArticlesCsv.doExport(llSWArticle);
-//			System.out.println("Ende Artikel-CSV schreiben : " + PvwsCalendar.getDateTime());
+		// Artikel-Daten in CSV schreiben
+			System.out.println("Beginn Artikel-CSV schreiben : " + PvwsCalendar.getDateTime());
+			exArticlesCsv.doExport(llSWArticle);
+			System.out.println("Ende Artikel-CSV schreiben : " + PvwsCalendar.getDateTime());
+			System.out.println();
 
-			// Media-Daten in SW importieren
-			System.out.println("Beginn Artikel-JSON schreiben : " + PvwsCalendar.getDateTime());
-			ExportSWMediaToRest.doExport(llSWArticle, ExportSWArticleToRest.MODE_MERGE);
-			System.out.println("Ende Artikel-JSON schreiben : " + PvwsCalendar.getDateTime());
+		// Media-Daten in SW importieren
+//			System.out.println("Beginn Media-JSON schreiben : " + PvwsCalendar.getDateTime());
+//			ExportSWMediaToRest.doExport(llSWArticle, ExportSWArticleToRest.MODE_MERGE);
+//			System.out.println("Ende Media-JSON schreiben : " + PvwsCalendar.getDateTime());
+//			System.out.println();
 
-			// Artikel-Daten in SW importieren
+		// Artikel-Daten in SW importieren
 //			System.out.println("Beginn Artikel-JSON schreiben : " + PvwsCalendar.getDateTime());
 //			ExportSWArticleToRest.doExport(llSWArticle, ExportSWArticleToRest.MODE_MERGE);
 //			System.out.println("Ende Artikel-JSON schreiben : " + PvwsCalendar.getDateTime());
+//			System.out.println();
 			
 		} 
 		catch (Exception e) {

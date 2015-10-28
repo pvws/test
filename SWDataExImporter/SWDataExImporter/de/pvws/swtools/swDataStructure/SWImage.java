@@ -11,14 +11,16 @@ public class SWImage {
 	private int swId;					// PK
 	private int swArticleId;			// PK
 	private int swArticleDetailId;		// PK
+	private String strPath;
+	private String strName;
 	private String description;
-	private String path;
 	private int main;
 	private int position;
 	private int width;
 	private int height;
 	private String relation;
 	private String extension;
+	private String strColorCode;
 	private int parentId;
 	private int mediaId;
 
@@ -72,6 +74,34 @@ public class SWImage {
 	}
 
 	/**
+	 * @return path
+	 */
+	public String getPath() {
+		return this.strPath;
+	}
+
+	/**
+	 * @param strPath das zu setzende Objekt path
+	 */
+	public void setPath(String path) {
+		this.strPath = path;
+	}
+
+	/**
+	 * @return name
+	 */
+	public String getName() {
+		return this.strName;
+	}
+
+	/**
+	 * @param name das zu setzende Objekt name
+	 */
+	public void setName(String name) {
+		this.strName = name;
+	}
+
+	/**
 	 * @return description
 	 */
 	public String getDescription() {
@@ -86,17 +116,17 @@ public class SWImage {
 	}
 
 	/**
-	 * @return path
+	 * @return description
 	 */
-	public String getPath() {
-		return path;
+	public String getColorCode() {
+		return description;
 	}
 
 	/**
-	 * @param path das zu setzende Objekt path
+	 * @param colorCode das zu setzende Objekt colorCode
 	 */
-	public void setPath(String path) {
-		this.path = path;
+	public void setColorCode(String colorCode) {
+		this.strColorCode = colorCode;
 	}
 
 	/**

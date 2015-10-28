@@ -52,7 +52,7 @@ public class SWArticle {
 	private LinkedList<String> llDwImages;
 	private LinkedList<String> llDwImagePaths;
 	private Boolean bDwImagesSet;
-	private SWImage swiImages;							// array
+	private LinkedList<SWImage> llSwiImages;			// array
 	private SWConfiguratorSet swcsConfiguratorSet;
 	private SWDownload swdDownlowds;					// array
 	private LinkedList<SWCategory> llSwcCategories;		// array
@@ -90,6 +90,8 @@ public class SWArticle {
 		this.llDwImagePaths = new LinkedList<String>();
 		this.strDwImagePath = ""; // "http://netrada2.scene7.com/is/image/netrada2/";
 		this.bDwImagesSet = false;
+		
+		this.llSwiImages = new LinkedList<SWImage>();
 	}
 
 
@@ -587,16 +589,16 @@ public class SWArticle {
 	/**
 	 * @return swiImages
 	 */
-	public SWImage getImages() {
-		return swiImages;
+	public LinkedList<SWImage> getImages() {
+		return this.llSwiImages;
 	}
 
 
 	/**
 	 * @param swiImages das zu setzende Objekt swiImages
 	 */
-	public void setImages(SWImage swiImages) {
-		this.swiImages = swiImages;
+	public void addImages(SWImage swiImages) {
+		this.llSwiImages.add(swiImages);
 	}
 
 
@@ -828,5 +830,84 @@ public class SWArticle {
 	 */
 	public LinkedList<String> geDwImagePathList() {
 		return this.llDwImagePaths;
+	}
+	
+	public void computeDWImageToSw () {
+		Iterator<String> itDwImage;
+		SWImage swImage;
+		String path;
+		String uri;
+		String name;
+		String desc;
+		String colorCode;
+		int pos;
+		
+		if (this.bDwImagesSet) {
+			itDwImage = this.getDwImageList().iterator();
+			while (itDwImage.hasNext()) {
+				swImage = new SWImage();
+				path = itDwImage.next();
+				uri = "/media/image" + this.getImagePathName(path) + ".jpg";
+				name = this.getImagePathName(path);
+				name = name.substring(name.lastIndexOf('/') + 1);
+				desc = this.getImageDesc(path);
+				pos = this.getImagePos(path);
+				colorCode = this.getImageColorCode(path);
+				
+				swImage.setPath(uri);
+				swImage.setName(name);
+				swImage.setDescription(desc);
+				swImage.setPosition(pos);
+				swImage.setMain(1);
+				swImage.setExtension("jpg");
+				swImage.setColorCode(colorCode);
+				
+				this.addImages(swImage);
+			}
+		}
+		
+	}
+	
+	private String getImagePathName (String path) {
+		String name = "";
+		
+		if (path != null) {
+			name = path.substring(0, path.indexOf('?'));
+			name = name.substring(name.lastIndexOf('/'));
+		}
+		
+		return name;
+	}
+	
+	private String getImageDesc (String path) {
+		String desc;
+		
+		desc = "Bild zu ";
+		desc += this.getImagePathName(path).substring(1);
+		
+		return desc;
+	}
+	
+	private int getImagePos (String path) {
+		int p = 0;
+		String pos;
+		
+		if (path != null) {
+			pos = this.getImagePathName(path);
+			pos = pos.substring(pos.lastIndexOf('_') + 1);
+			p = Integer.parseInt(pos);
+		}
+		
+		return p;
+	}
+	
+	private String getImageColorCode (String path) {
+		String cc = "00";
+		
+		cc = this.getImagePathName(path);
+		cc = cc.substring(0, cc.lastIndexOf('_'));
+		cc = cc.substring(cc.lastIndexOf('_') + 1);
+		
+		return cc;
 	}
 }
