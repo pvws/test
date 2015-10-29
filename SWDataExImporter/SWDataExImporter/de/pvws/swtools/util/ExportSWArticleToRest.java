@@ -4,8 +4,8 @@
 package de.pvws.swtools.util;
 
 import de.pvws.swtools.swDataStructure.*;
-import de.pvws.swtools.swRestDataStructure.SwArticleToJson;
-import de.pvws.swtools.swRestDataStructure.SwMediaToJson;
+import de.pvws.swtools.util.Json.SwArticleToJson;
+import de.pvws.swtools.util.Json.SwMediaToJson;
 import de.pvws.swtools.util.REST.*;
 
 import java.io.StringReader;
@@ -109,7 +109,7 @@ public class ExportSWArticleToRest {
 		
 		this.llSwaOld = new LinkedList<SWArticle>();
 		
-		this.strSWDataJsonOld = PullDataFromSW.doPull();
+//		this.strSWDataJsonOld = PullDataFromSW.doPull();
 	} // doPull()
 	
 	/**
@@ -123,7 +123,7 @@ public class ExportSWArticleToRest {
 		SWArticle swa;
 		
 		String strJsonPush;
-		String strJsonReturn;
+		String strJsonReturn = "";
 
 		JsonStructure js;
 		// Exit if something is wrong
@@ -138,11 +138,9 @@ public class ExportSWArticleToRest {
 			swa = itSwa.next();
 			if (swa.getName() == null || swa.getName().equals("") || swa.getMainDetail().getPrice(1).getPrice() >= 99999.00)
 				continue;
-			strJsonPush = SwMediaToJson.buildJsonMediaImport(swa);
-			//strJsonPush = SwArticleToJson.buildJsonArticle(swa);
+			strJsonPush = SwArticleToJson.buildJsonArticle(swa);
 
-			strJsonReturn = PushDataToSW.doPush(strJsonPush, PushDataToSW.ARTICLES);
-			strJsonReturn = PushDataToSW.doPush(strJsonPush, PushDataToSW.MEDIA);
+//			strJsonReturn = PushDataToSW.doPush(strJsonPush, PushDataToSW.ARTICLES);
 			
 			// TODO: Response auswerten
 			System.out.println(strJsonReturn);

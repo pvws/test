@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.pvws.swtools.swRestDataStructure;
+package de.pvws.swtools.util.Json;
 
 import de.pvws.swtools.swDataStructure.*;
 

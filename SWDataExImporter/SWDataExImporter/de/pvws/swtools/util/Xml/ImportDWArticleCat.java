@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.pvws.swtools.util;
+package de.pvws.swtools.util.Xml;
 
 import de.pvws.swtools.swDataStructure.*;
 
@@ -35,6 +35,7 @@ public class ImportDWArticleCat extends DefaultHandler {
 	private Boolean bIsDESet;
 	private Boolean bIsZoomLarge;
 	private String strDwImagePath;
+	private int iSizePos;
 
 	
 	/**
@@ -171,6 +172,9 @@ public class ImportDWArticleCat extends DefaultHandler {
 				switch (atts.getQName(i)) {
 				case "attribute-id":
 					this.swcgConficGroup = new SWConfiguratorGroup(atts.getValue(i));
+					// for counting position of size value
+					if (atts.getValue(i).equals("size"))
+						this.iSizePos = 0;
 					break;
 				} // switch (attribute)
 			} // for all attributes
@@ -328,6 +332,7 @@ public class ImportDWArticleCat extends DefaultHandler {
 							swcg = new SWConfiguratorGroup("color");
 							swco = new SWConfiguratorOption(swcg);
 							swco.setName(strEValue.substring(3, strEValue.length()));
+							swco.setCode(this.strEValue.substring(0, 2));
 							this.swad.addConfiguratorOptions(swco);
 							this.swad.getAttribute().setAttr1(strAValue + "|" + strEValue);
 							break;
@@ -340,7 +345,7 @@ public class ImportDWArticleCat extends DefaultHandler {
 						case "size":
 							swcg = new SWConfiguratorGroup("size");
 							swco = new SWConfiguratorOption(swcg);
-							swco.setName(strEValue); //(strEValue.substring(3, strEValue.length()-1));
+							swco.setName(strEValue);
 							this.swad.addConfiguratorOptions(swco);
 							this.swad.getAttribute().setAttr4(strAValue + "|" + strEValue);
 							break;
@@ -352,6 +357,9 @@ public class ImportDWArticleCat extends DefaultHandler {
 			case "variation-attribute":
 				break;
 			case "variation-attribute-value":
+				// Count and Set size position
+				this.iSizePos += 1;
+				this.swcoConfigOption.setPosition(this.iSizePos);
 				this.swad.addConfiguratorOptions(swcoConfigOption);
 				break;
 			case "display-value":

@@ -4,7 +4,7 @@
 package de.pvws.swtools.util;
 
 import de.pvws.swtools.swDataStructure.*;
-import de.pvws.swtools.swRestDataStructure.SwMediaToJson;
+import de.pvws.swtools.util.Json.SwMediaToJson;
 import de.pvws.swtools.util.REST.*;
 
 import java.util.*;

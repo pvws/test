@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.pvws.swtools.util;
+package de.pvws.swtools.util.Xml;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -24,7 +24,7 @@ import de.pvws.swtools.swDataStructure.SWPrice;
  * @author pvws
  *
  */
-public class ImportDWCatAss extends DefaultHandler {
+public class ImportDWPriceCat extends DefaultHandler {
 	private LinkedList<SWPrice> llSWPrice;
 	private LinkedList<SWArticle> llSWArticle;
 	private String strEValue;
@@ -36,7 +36,7 @@ public class ImportDWCatAss extends DefaultHandler {
 	/**
 	 * 
 	 */
-	public ImportDWCatAss () {
+	public ImportDWPriceCat () {
 		this.llSWPrice = new LinkedList<SWPrice>();
 		this.bIsSale = false;
 	}
@@ -44,7 +44,7 @@ public class ImportDWCatAss extends DefaultHandler {
 	/**
 	 * 
 	 */
-	public ImportDWCatAss (LinkedList<SWArticle> llSWArticle) {
+	public ImportDWPriceCat (LinkedList<SWArticle> llSWArticle) {
 		this.llSWPrice = new LinkedList<SWPrice>();
 		this.llSWArticle = llSWArticle;
 		this.bIsSale = false;
@@ -80,6 +80,9 @@ public class ImportDWCatAss extends DefaultHandler {
 	@Override
 	public void endDocument () throws SAXException {
 		System.out.println("Ende des XML-Dokumentes");
+		System.out.println("Beginn Zuweisung Preise zu Artikel");
+		this.sortPriceData();
+		System.out.println("Ende Zuweisung Preise zu Artikel");
 	}
 	
 	@Override
@@ -90,14 +93,6 @@ public class ImportDWCatAss extends DefaultHandler {
 		String strAValue;
 		this.aAttribute = atts;
 		
-		// Logging
-/*		System.out.println("Beginn des Elementes " + localeName);
-		if (localeName == "pricebooks")
-			System.out.println("\tNamespace : " + namespaceURI);
-		for (int i = 0; i < atts.getLength(); i++) {
-			System.out.println ("\tAttribute " + atts.getQName(i) + " : " + atts.getValue(i));
-		}
-*/		
 		// Element-Attribute übernehmen
 		switch (localeName) {
 		case "header":
@@ -167,12 +162,11 @@ public class ImportDWCatAss extends DefaultHandler {
 							int l) throws SAXException {
 		String v = String.valueOf(ch).substring(s, s+l).trim();
 		this.strEValue = v;
-		if (v.length() > 0) {
+//		if (v.length() > 0) {
 //			System.out.println ("	Wert :" + v);
-		}
+//		}
 	} // characters
 	
-/*	
 	private void sortPriceData () {
 		Hashtable<String, SWPrice> htPrice;
 		Iterator<SWPrice> iPrice;
@@ -184,7 +178,6 @@ public class ImportDWCatAss extends DefaultHandler {
 		String ean;
 		
 		System.out.println("Anzahl PriceData : " + this.llSWPrice.size());
-		// Hashtable Price <ArticleId, swPrice>
 		htPrice = new Hashtable<String, SWPrice>();
 		iPrice = this.llSWPrice.iterator();
 		while (iPrice.hasNext()) {
@@ -215,5 +208,4 @@ public class ImportDWCatAss extends DefaultHandler {
 			} // while iSwad.hasNext()
 		} // while iSwa.hasNext()
 	} // sortPriceData
-*/
 }

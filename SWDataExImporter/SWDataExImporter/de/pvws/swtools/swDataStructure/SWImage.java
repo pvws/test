@@ -119,7 +119,7 @@ public class SWImage {
 	 * @return description
 	 */
 	public String getColorCode() {
-		return description;
+		return this.strColorCode;
 	}
 
 	/**

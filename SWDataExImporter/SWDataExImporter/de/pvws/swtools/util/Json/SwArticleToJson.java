@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.pvws.swtools.swRestDataStructure;
+package de.pvws.swtools.util.Json;
 
 import de.pvws.swtools.swDataStructure.*;
 
@@ -66,7 +66,15 @@ public class SwArticleToJson {
 			job.add("tax", this.createTaxObject());
 			job.add("mainDetail", this.createMainDetailObject());
 			job.add("supplier", this.createSupplierObject());
-						
+			job.add("description", this.swArticle.getDescription());
+			job.add("descriptionLong", this.swArticle.getDescriptionLong());
+			job.add("images", this.createImagesArray());
+			// have to exists only if there are Variants! 
+			if (this.swArticle.hasVariants())
+				job.add("configuratorSet", this.createConfiguratorSetObject());
+			
+			job.add("variants", this.createVariantsArray());
+			
 			joSwad = job.build();
 			
 			jab.add(joSwad);
@@ -142,7 +150,7 @@ public class SwArticleToJson {
 			job.add("packUnit", swad.getPackUnit());
 			job.add("shippingTime", swad.getShippingTime());
 			job.add("prices", this.createPriceArray(swad));
-			//job.add("configuratorOptions", "[]");
+			job.add("configuratorOptions", this.createConfigOptionsArray(swad));
 			//job.add("attribute", "[]");
 			//job.add("id", swad.getSwId());
 			//job.add("articleId", swad.getSwArticleId());
@@ -265,7 +273,7 @@ public class SwArticleToJson {
 		
 		// create Price Array
 		iSwPrice = swad.getPrices().iterator();
-		if (iSwPrice.hasNext()) {
+		while (iSwPrice.hasNext()) {
 			swPrice = iSwPrice.next();
 			job = Json.createObjectBuilder();
 			job.add("from", swPrice.getFrom());
@@ -277,6 +285,245 @@ public class SwArticleToJson {
 		ja = jab.build();
 		
 		return ja;		
-	} // createSupplierObject
+	} // createPriceArray
+
+	private JsonObject createConfiguratorSetObject (){
+		JsonObjectBuilder job;
+		JsonObject jb;
+		
+		job = Json.createObjectBuilder();
+
+	// Name
+		if (this.swArticle.getConfiguratorSet().getStrName() != null && this.swArticle.getConfiguratorSet().getStrName() != "")
+			job.add("name", this.swArticle.getConfiguratorSet().getStrName());
+		else
+			job.add("name", "Fashion");
+		// Groups-Array
+		job.add("groups", this.createConfiguratorGroupsArray());
+			
+		jb = job.build();
+		
+		return jb;
+	} // createConfiguratorSetObject
+
+	private JsonArray createConfiguratorGroupsArray () {
+		JsonObjectBuilder job;
+		JsonObject jb;
+		JsonArrayBuilder jab;
+		JsonArray ja;
+		Iterator<SWConfiguratorGroup> iSwcg;
+		SWConfiguratorGroup swcg;
+		
+		jab = Json.createArrayBuilder();
+		
+		// create ConfiguratorGroup Array
+		iSwcg = this.swArticle.getConfiguratorSet().getCgGroups().iterator();
+		while (iSwcg.hasNext()) {
+			swcg = iSwcg.next();
+			job = Json.createObjectBuilder();
+			job.add("id", swcg.getSwId());
+			job.add("name", swcg.getName());
+			job.add("options", this.createConfigOptionArrayByGroupName(swcg.getName()));
+			jb = job.build();
+			jab.add(jb);
+		}
+		
+		ja = jab.build();
+		
+		return ja;		
+	} // createConfiguratorGroupsArray
+
+	private JsonArray createVariantsArray () {
+		JsonArrayBuilder jab;
+		JsonArray ja;
+		Iterator<SWArticleDetail> iSwad;
+		SWArticleDetail swad;
+		
+		jab = Json.createArrayBuilder();
+		
+		// create ConfiguratorGroup Array
+		iSwad = this.swArticle.getVariants().iterator();
+		while (iSwad.hasNext()) {
+			swad = iSwad.next();
+			jab.add(this.createArticleDetailObject(swad));
+		}
+		
+		ja = jab.build();
+		
+		return ja;		
+	} // createVariantsArray
+
+	private JsonArray createConfigOptionsArray (SWArticleDetail swad) {
+		JsonObjectBuilder job;
+		JsonObject jb;
+		JsonArrayBuilder jab;
+		JsonArray ja;
+		Iterator<SWConfiguratorOption> iSwco;
+		SWConfiguratorOption swco;
+		
+		jab = Json.createArrayBuilder();
+		
+		// create ConfiguratorGroup Array
+		iSwco = swad.getConfiguratorOptions().iterator();
+		while (iSwco.hasNext()) {
+			swco = iSwco.next();
+			job = Json.createObjectBuilder();
+			job.add("name", swco.getName());
+			job.add("position", swco.getPosition());
+			job.add("groupId", swco.getSwConfiguratorGroup().getSwId());
+
+			jb = job.build();
+			
+			jab.add(jb);
+		}
+		
+		ja = jab.build();
+		
+		return ja;		
+	} // createConfigOptionsArray
+
+	private JsonArray createConfigOptionArrayByGroupName (String name) {
+		JsonObjectBuilder job;
+		JsonObject jb;
+		JsonArrayBuilder jab;
+		JsonArray ja;
+		Iterator<SWConfiguratorOption> iSwco;
+		Iterator<SWArticleDetail> iSwad;
+		SWConfiguratorOption swco;
+		SWArticleDetail swad;
+		LinkedList<String> llOName;
+		
+		llOName = new LinkedList<String>();
+		jab = Json.createArrayBuilder();
+
+		// create ConfigGroupArryByName for MainDetail Variant
+		swad = this.swArticle.getMainDetail();
+		iSwco = swad.getConfiguratorOptions().iterator();
+		while (iSwco.hasNext()) {
+			swco = iSwco.next();
+			if (swco.getSwConfiguratorGroup().getName().equals(name)) {
+				if (!llOName.contains(swco.getName())) { 
+					job = Json.createObjectBuilder();
+					job.add("name", swco.getName());
+					job.add("position", swco.getPosition());
+					jb = job.build();
+					jab.add(jb);
+					llOName.add(swco.getName());
+				}
+			}
+		}
+		// create ConfigGroupArryByName for Variants Variant
+		iSwad = this.swArticle.getVariants().iterator();
+		while (iSwad.hasNext()) {
+			swad = iSwad.next();
+			iSwco = swad.getConfiguratorOptions().iterator();
+			while (iSwco.hasNext()) {
+				swco = iSwco.next();
+				if (swco.getSwConfiguratorGroup().getName().equals(name)) {
+					if (!llOName.contains(swco.getName())) { 
+						job = Json.createObjectBuilder();
+						job.add("name", swco.getName());
+						job.add("position", swco.getPosition());
+						jb = job.build();
+						jab.add(jb);
+						llOName.add(swco.getName());
+					}
+				}
+			}
+		}
+		
+		ja = jab.build();
+		
+		return ja;
+	} // createConfigOptionsArrayByGroupName
+
+	private JsonArray createImagesArray () {
+		JsonObjectBuilder job;
+		JsonObject jb;
+		JsonArrayBuilder jab;
+		JsonArray ja;
+		Iterator<SWImage> iSwi;
+		SWImage swi;
+		
+		jab = Json.createArrayBuilder();
+		
+		// create ConfiguratorGroup Array
+		iSwi = this.swArticle.getImages().iterator();
+		while (iSwi.hasNext()) {
+			swi = iSwi.next();
+			job = Json.createObjectBuilder();
+			job.add("mediaId", swi.getMediaId());
+			job.add("path", swi.getPath());
+			job.add("options", this.createImageOptionArray(swi));
+
+			jb = job.build();
+			
+			jab.add(jb);
+		}
+		
+		ja = jab.build();
+		
+		return ja;		
+	} // createImagesArray
+
+	private JsonArray createImageOptionArray (SWImage swi) {
+		JsonObjectBuilder job;
+		JsonObject jb;
+		JsonArrayBuilder jab;
+		JsonArray ja;
+		Iterator<SWArticleDetail> iSwad;
+		Iterator<SWConfiguratorOption> iSwco;
+		SWArticleDetail swad;
+		SWConfiguratorOption swco;
+		LinkedList<String> llOName;
+		
+		llOName = new LinkedList<String>();
+		jab = Json.createArrayBuilder();
+		
+		// create ImageOptions Array for MainDetail
+		swad = this.swArticle.getMainDetail();
+		iSwco = swad.getConfiguratorOptions().iterator();
+		while (iSwco.hasNext()) {
+			swco = iSwco.next();
+			if (swco.getSwConfiguratorGroup().getName().equals("Farbe"))
+				if (swco.getCode() == swi.getColorCode()) {
+					if (!llOName.contains(swco.getName())) {
+						job = Json.createObjectBuilder();
+						job.add("name", swco.getName());
+	
+						jb = job.build();
+						
+						jab.add(jb);
+						llOName.add(swco.getName());
+					}
+				}
+		}
+		
+		// create ImageOptions Array for Variants
+		iSwad = this.swArticle.getVariants("Farbe", swi.getColorCode()).iterator();
+		while (iSwad.hasNext()) {
+			swad = iSwad.next();
+			iSwco = swad.getConfiguratorOptions().iterator();
+			while (iSwco.hasNext()) {
+				swco = iSwco.next();
+				if (swco.getSwConfiguratorGroup().getName().equals("Farbe"))
+					if (swco.getCode().equals(swi.getColorCode())) {
+						if (!llOName.contains(swco.getName())) {
+							job = Json.createObjectBuilder();
+							job.add("name", swco.getName());
+		
+							jb = job.build();
+							
+							jab.add(jb);
+							llOName.add(swco.getName());
+						}
+					}
+			}
+		}
+		
+		ja = jab.build();
+		
+		return ja;		
+	} // createImageOptionsArray
 
 }

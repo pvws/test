@@ -13,6 +13,7 @@ public class SWConfiguratorOption {
 	private String name;
 	private int position;
 	private SWConfiguratorGroup swcgConfigGroup;
+	private String strCode;
 
 	/**
 	 * 
@@ -110,5 +111,32 @@ public class SWConfiguratorOption {
 		this.position = position;
 	}
 	
+	/**
+	 * 
+	 * @return Code of the Option if set, empty String else
+	 */
+	public String getCode () {
+		if (this.strCode != null)
+			return this.strCode;
+		else
+			return "";
+	}
 	
+	/**
+	 * Persist a code regarding to the Option-Value, e.g. Color Code
+	 * 
+	 * @param code
+	 */
+	public void setCode (String code) {
+		this.strCode = code;
+		
+		if (this.position <= 0) {
+			try {
+				this.position = Integer.valueOf(code);
+			}
+			catch (Exception e) {
+				this.position = 0;
+			}
+		}
+	}
 }

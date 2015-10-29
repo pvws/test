@@ -3,6 +3,9 @@
  */
 package de.pvws.swtools.swDataStructure;
 
+import java.util.Collection;
+import java.util.Hashtable;
+
 /**
  * 1 : standard
  * 
@@ -14,15 +17,16 @@ public class SWConfiguratorSet {
 	private String strName;
 	private Boolean bPublic;
 	private int iType;
-	private SWConfiguratorGroup cgGroup;		// array
+	private Hashtable<String, SWConfiguratorGroup> htSwcgGroup;		// array
 	
 	/**
 	 * 
 	 */
 	public SWConfiguratorSet () {
 		this.iSwId = 1;
-		this.strName = "Standard";
+		this.strName = "Fashion";
 		this.bPublic = true;
+		this.htSwcgGroup = new Hashtable<String, SWConfiguratorGroup>();
 	}
 
 	/**
@@ -84,15 +88,15 @@ public class SWConfiguratorSet {
 	/**
 	 * @return cgGroup
 	 */
-	public SWConfiguratorGroup getCgGroup() {
-		return cgGroup;
+	public Collection<SWConfiguratorGroup> getCgGroups() {
+		return this.htSwcgGroup.values();
 	}
 
 	/**
 	 * @param cgGroup das zu setzende Objekt cgGroup
 	 */
-	public void setCgGroup(SWConfiguratorGroup cgGroup) {
-		this.cgGroup = cgGroup;
+	public void addCgGroup(SWConfiguratorGroup cgGroup) {
+			this.htSwcgGroup.put(cgGroup.getName(), cgGroup);
 	}
 
 }

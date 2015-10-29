@@ -183,10 +183,10 @@ public class SWArticle {
 	 * @return strDescription
 	 */
 	public String getDescription() {
-		if (this.strDescription.equals("")) {
+		if (this.strDescription == null || this.strDescription.equals("")) {
 			return this.strName;
 		}
-		return strDescription;
+		return this.strDescription;
 	}
 
 
@@ -202,7 +202,10 @@ public class SWArticle {
 	 * @return strDescriptionLong
 	 */
 	public String getDescriptionLong() {
-		return strDescriptionLong;
+		if (this.strDescriptionLong == null) 
+			return "";
+		else
+			return this.strDescriptionLong;
 	}
 
 
@@ -250,10 +253,16 @@ public class SWArticle {
 	 * @param swadMainDetail das zu setzende Objekt swadMainDetail
 	 */
 	public void setMainDetail(SWArticleDetail swadMainDetail) {
+		Iterator<SWConfiguratorOption> iSco;
 		if (swadMainDetail != null) {
 			this.swadMainDetail = swadMainDetail;
 			this.swadMainDetail.setStylenumber(this.strArticleNumber); // orig Stylenumber
-			this.bIsMainDetailSet = true;
+			this.setIsMainDetailSet(true);
+
+			iSco = swadMainDetail.getConfiguratorOptions().iterator();
+			while (iSco.hasNext()) {
+				this.swcsConfiguratorSet.addCgGroup(iSco.next().getSwConfiguratorGroup());
+			}
 		}
 	} // setMainDetail
 
@@ -637,19 +646,7 @@ public class SWArticle {
 	/**
 	 * @return swcCategories
 	 */
-	@SuppressWarnings("unchecked")
 	public LinkedList<SWCategory> getCategories() {
-//		Iterator<SWArticleDetail> iSwad;
-//		LinkedList<SWCategory> llSwc;
-//		
-//		llSwc = (LinkedList<SWCategory>) this.llSwcCategories.clone();
-//		
-//		iSwad = this.llSwadVariants.iterator();
-//		while (iSwad.hasNext()) {
-//			llSwc.addAll(iSwad.next().getCategories());
-//		}
-//
-//		return llSwc;
 		return this.llSwcCategories;
 	}
 
@@ -702,19 +699,75 @@ public class SWArticle {
 	}
 
 	/**
+	 * Returns a LinkedList with the SWArticleDetail Objects which fits to the ConfigGroup / ConfigOptionCode
+	 * (eg Farbe / White)
+	 * 
+	 * @param configGroupName
+	 * @param configOptioncode
+	 * @return LinkedList with fitting SWArticleDetail Objects
+	 */
+	public LinkedList<SWArticleDetail> getVariants (String configGroupName, String configOptionCode) {
+		LinkedList<SWArticleDetail> llSwad;
+		Iterator<SWConfiguratorOption> iSwco;
+		Iterator<SWArticleDetail> iSwad;
+		SWConfiguratorOption swco;
+		SWArticleDetail swad;
+		
+		llSwad = new LinkedList<SWArticleDetail>();
+		
+		// check MainDetail
+		swad = this.getMainDetail();
+		iSwco = swad.getConfiguratorOptions().iterator();
+		while (iSwco.hasNext()) {
+			swco = iSwco.next();
+			if (swco.getSwConfiguratorGroup().getName().equals(configGroupName))
+				if (swco.getCode().equals(configOptionCode)) {
+					llSwad.add(swad);
+					break;
+				}
+		}
+
+		// check Variants
+		if (this.hasVariants()) {
+			iSwad = this.getVariants().iterator();
+			while (iSwad.hasNext()) {
+				swad = iSwad.next();
+				iSwco = swad.getConfiguratorOptions().iterator();
+				while (iSwco.hasNext()) {
+					swco = iSwco.next();
+					if (swco.getSwConfiguratorGroup().getName().equals(configGroupName))
+						if (swco.getCode().equals(configOptionCode)) {
+							llSwad.add(swad);
+							break;
+						}
+				}
+			}
+		}
+
+		return llSwad;
+	} // getVariants (ConfigGroupName, ConfigOptionName)
+
+	/**
 	 * @param swadVariants das zu setzende Objekt swadVariants
 	 */
 	public void addVariant(SWArticleDetail swadVariant) {
+		Iterator<SWConfiguratorOption> iSco;
+		
 		// set Supplier if needed
 		if (swadVariant.getSupplierNumber() == null || swadVariant.getSupplierNumber().equals(""))
 			swadVariant.setSupplierNumber(String.valueOf(this.iSwSupplierId));
-		// TODO: ConfigOptions !?
 		// if there is no MainDetail yet, set it
 		if (!this.isMainDetailSet()) {
 			this.setMainDetail(swadVariant);
 		}
 		else {
 			this.llSwadVariants.add(swadVariant);
+
+			iSco = swadMainDetail.getConfiguratorOptions().iterator();
+			while (iSco.hasNext()) {
+				this.swcsConfiguratorSet.addCgGroup(iSco.next().getSwConfiguratorGroup());
+			}
+			
 			this.setHasVariants(true);
 		}
 	}
@@ -832,6 +885,9 @@ public class SWArticle {
 		return this.llDwImagePaths;
 	}
 	
+	/**
+	 * Transforms DW Image Paths to SW Image Object
+	 */
 	public void computeDWImageToSw () {
 		Iterator<String> itDwImage;
 		SWImage swImage;
@@ -868,6 +924,12 @@ public class SWArticle {
 		
 	}
 	
+	/**
+	 * Extracts the Image Name out of a URI String
+	 * 
+	 * @param path
+	 * @return Image Name
+	 */
 	private String getImagePathName (String path) {
 		String name = "";
 		
@@ -878,7 +940,14 @@ public class SWArticle {
 		
 		return name;
 	}
-	
+
+	/**
+	 * Transforms a Image Path URI to a standard Image Description.
+	 * (Bild zu /ImageName/)
+	 * 
+	 * @param path
+	 * @return Image Description
+	 */
 	private String getImageDesc (String path) {
 		String desc;
 		
@@ -887,7 +956,13 @@ public class SWArticle {
 		
 		return desc;
 	}
-	
+
+	/**
+	 * Extracts the Image Position out of the Image Name (Path / URI)
+	 * 
+	 * @param path
+	 * @return Image Position
+	 */
 	private int getImagePos (String path) {
 		int p = 0;
 		String pos;
@@ -901,6 +976,11 @@ public class SWArticle {
 		return p;
 	}
 	
+	/**
+	 * Extracts the ColorCode out of the Image Name (Path / URI)
+	 * @param path
+	 * @return
+	 */
 	private String getImageColorCode (String path) {
 		String cc = "00";
 		
@@ -909,5 +989,5 @@ public class SWArticle {
 		cc = cc.substring(cc.lastIndexOf('_') + 1);
 		
 		return cc;
-	}
+	}	
 }

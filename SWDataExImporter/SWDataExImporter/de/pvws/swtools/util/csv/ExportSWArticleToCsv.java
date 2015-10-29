@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.pvws.swtools.util;
+package de.pvws.swtools.util.csv;
 
 import de.pvws.swtools.swDataStructure.*;
 
